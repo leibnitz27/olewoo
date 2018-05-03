@@ -45,8 +45,7 @@ namespace Org.Benf.OleWoo.Typelib
         {
             ih.AppendLine("[");
             var lprops = new List<string> {$"uuid({_ta.guid})"};
-            //OWCustData.GetCustData(_ti, ref lprops);
-            CustomDatas
+            OWCustData.GetCustData(_ti, ref lprops);
             var help = _ti.GetHelpDocumentationById(-1, out var context);
             AddHelpStringAndContext(lprops, help, context);
             for (var i = 0; i < lprops.Count; ++i)

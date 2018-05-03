@@ -72,6 +72,7 @@ namespace Org.Benf.OleWoo.Typelib
                     lprops.Add("propputref");
                     break;
             }
+            OWCustData.GetAllFuncCustData(_fd.memid -1, _ti, ref lprops);
             var help = _ti.GetHelpDocumentationById(_fd.memid, out var context);
             if (0 != (_fd.wFuncFlags & FuncDesc.FuncFlags.FUNCFLAG_FRESTRICTED)) lprops.Add("restricted");
             if (0 != (_fd.wFuncFlags & FuncDesc.FuncFlags.FUNCFLAG_FHIDDEN)) lprops.Add("hidden");
