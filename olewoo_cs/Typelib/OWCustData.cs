@@ -38,7 +38,7 @@ namespace Org.Benf.OleWoo.Typelib
                 var item = new CUSTDATAITEM(); // just to size it for next line
                 var itemPtr = custdata.prgCustData + (x * Marshal.SizeOf(item));
                 item = Marshal.PtrToStructure<CUSTDATAITEM>(itemPtr);
-                lprops.Add($"custom({item.guid}, \"{item.varValue}\")");
+                lprops.Add($"custom({item.guid}, {ITypeInfoXtra.QuoteString(item.varValue)})");
             }
             NativeMethods.ClearCustData(ptr);
             Marshal.FreeHGlobal(ptr);
