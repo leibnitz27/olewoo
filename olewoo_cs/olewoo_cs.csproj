@@ -119,6 +119,7 @@
     <Compile Include="Typelib\ITypeInfoXtra.cs" />
     <Compile Include="Typelib\OWChildrenIndirect.cs" />
     <Compile Include="Typelib\OWCoClass.cs" />
+    <Compile Include="Typelib\OWCustData.cs" />
     <Compile Include="Typelib\OWDispInterface.cs" />
     <Compile Include="Typelib\OWDispInterfaceInheritedInterfaces.cs" />
     <Compile Include="Typelib\OWDispProperty.cs" />
