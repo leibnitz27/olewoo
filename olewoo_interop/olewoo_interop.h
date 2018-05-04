@@ -15,8 +15,61 @@ namespace olewoo_interop {
 		virtual void AddLink(System::String ^ s, System::String ^ s2) = 0;
 	};
 
+	public ref class CustomTypeLibData
+	{
+		System::String^ _libName;
+		System::Guid^ _libGuid;
+		DWORD _majorVersion;
+		DWORD _minorVersion;
+	public:
+		property System::String^ LibName
+		{
+			System::String^ get()
+			{
+				return _libName;
+			}
+			void set(System::String^ value)
+			{
+				_libName = value;
+			}
+		}
+		property System::Guid^ LibGuid
+		{
+			System::Guid^ get()
+			{
+				return _libGuid;
+			}
+			void set(System::Guid^ value)
+			{
+				_libGuid = value;
+			}
+		}
+		property DWORD MajorVersion
+		{
+			DWORD get()
+			{
+				return _majorVersion;
+			}
+			void set(DWORD value)
+			{
+				_majorVersion = value;
+			}
+		}
+		property DWORD MinorVersion
+		{
+			DWORD get()
+			{
+				return _minorVersion;
+			}
+			void set(DWORD value)
+			{
+				_minorVersion = value;
+			}
+		}
+	};
+
 	System::Guid MkSystemGuid(GUID & graw);
-	void stringifyTypeDesc(TYPEDESC* typeDesc, ITypeInfo* pTypeInfo, IDLFormatter_iop ^ ift);
+	void stringifyTypeDesc(TYPEDESC* typeDesc, ITypeInfo* pTypeInfo, IDLFormatter_iop ^ ift, CustomTypeLibData ^ custLibData);
 
 	public ref class CustomData
 	{
@@ -147,12 +200,12 @@ namespace olewoo_interop {
 		{
 			m_ptd = &td;
 		}
-		void ComTypeNameAsString(System::Runtime::InteropServices::ComTypes::ITypeInfo ^ ti, IDLFormatter_iop ^ ift)
+		void ComTypeNameAsString(System::Runtime::InteropServices::ComTypes::ITypeInfo ^ ti, IDLFormatter_iop ^ ift, CustomTypeLibData ^ custLibData)
 		{
 			CComVariant tmp;
 			System::Runtime::InteropServices::Marshal::GetNativeVariantForObject(ti, System::IntPtr(&tmp));
 			CComQIPtr<ITypeInfo> titmp = tmp.punkVal;
-			stringifyTypeDesc(m_ptd, titmp, ift);
+			stringifyTypeDesc(m_ptd, titmp, ift, custLibData);
 		}
 		property int hreftype
 		{
