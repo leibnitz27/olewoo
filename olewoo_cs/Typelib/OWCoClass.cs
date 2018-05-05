@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using olewoo_interop;
+using IMPLTYPEFLAGS = System.Runtime.InteropServices.ComTypes.IMPLTYPEFLAGS;
 
 namespace Org.Benf.OleWoo.Typelib
 {
@@ -37,10 +40,14 @@ namespace Org.Benf.OleWoo.Typelib
             }
             return res;
         }
+
         public override void BuildIDLInto(IDLFormatter ih)
         {
             ih.AppendLine("[");
             var lprops = new List<string> {$"uuid({_ta.guid})"};
+            var ta = new TypeAttr(_ti);
+            lprops.Add($"version({ta.wMajorVerNum}.{ta.wMinorVerNum})");
+            OWCustData.GetCustData(_ti, ref lprops);
             var help = _ti.GetHelpDocumentationById(-1, out var context);
             AddHelpStringAndContext(lprops, help, context);
             for (var i = 0; i < lprops.Count; ++i)

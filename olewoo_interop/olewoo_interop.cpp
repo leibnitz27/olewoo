@@ -6,7 +6,6 @@
  *
  */
 #include "stdafx.h"
-
 #include "olewoo_interop.h"
 
 using namespace olewoo_interop;

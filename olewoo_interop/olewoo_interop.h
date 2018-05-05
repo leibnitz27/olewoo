@@ -1,5 +1,8 @@
 // olewoo_interop.h
 
+#include "stdafx.h"
+#include "typelibdependencies.h"
+#include <unordered_set>
 #include "atlbase.h"
 #include <string>
 #pragma once
@@ -7,6 +10,38 @@
 using namespace System;
 
 namespace olewoo_interop {
+
+	public ref class TypeLibMetadata
+	{
+	public:
+		System::Collections::Generic::List<System::Runtime::InteropServices::ComTypes::ITypeLib^>^ GetDependentLibraries(System::Runtime::InteropServices::ComTypes::ITypeLib^ ptypeLib)
+		{
+			auto list = gcnew System::Collections::Generic::List<System::Runtime::InteropServices::ComTypes::ITypeLib^>();
+			System::IntPtr ip;
+			try {
+				ip = System::Runtime::InteropServices::Marshal::GetIUnknownForObject(ptypeLib);
+				ITypeLib* pitl = static_cast<ITypeLib*>(ip.ToPointer());
+				auto set = GetDependencies(pitl);
+				for (const auto& elem : set) {
+					auto ptr = elem.GetInterfacePtr();
+					auto intPtr = System::IntPtr(ptr);
+					auto obj = System::Runtime::InteropServices::Marshal::GetObjectForIUnknown(intPtr);
+					auto lib = static_cast<System::Runtime::InteropServices::ComTypes::ITypeLib^>(obj);
+					list->Add(lib);
+				}
+			}
+			catch (...)
+			{
+				// oh well
+			}
+
+			if (ip != System::IntPtr::Zero)
+			{
+				System::Runtime::InteropServices::Marshal::Release(ip);
+			}
+			return list;
+		}
+	};
 
 	public ref class IDLFormatter_iop abstract
 	{
@@ -114,8 +149,20 @@ namespace olewoo_interop {
 				return MkSystemGuid(_plibAttr->guid);
 			}
 		}
-//    LCID lcid;
-//    SYSKIND syskind;
+		property int lcid
+		{
+			int get()
+			{
+				return _plibAttr->lcid;
+			}
+		}
+		property int syskind
+		{
+			int get()
+			{
+				return _plibAttr->syskind;
+			}
+		}
 		property int wMajorVerNum
 		{
 			int get()

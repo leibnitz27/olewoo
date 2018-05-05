@@ -53,6 +53,9 @@ namespace Org.Benf.OleWoo.Typelib
         {
             ih.AppendLine("[");
             var lprops = new List<string> {$"uuid({_ta.guid})"};
+            var ta = new TypeAttr(_ti);
+            lprops.Add($"version({ta.wMajorVerNum}.{ta.wMinorVerNum})");
+            OWCustData.GetCustData(_ti, ref lprops);
             var help = _ti.GetHelpDocumentationById(-1, out var context);
             AddHelpStringAndContext(lprops, help, context);
             if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FHIDDEN)) lprops.Add("hidden");

@@ -12,6 +12,9 @@ namespace Org.Benf.OleWoo
         [DllImport("oleaut32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern int LoadTypeLib(string fileName, out ITypeLib typeLib);
 
+        [DllImport("oleaut32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
+        public static extern void ClearCustData(IntPtr pCustData);
+
         public static void SetTabs(this System.Windows.Forms.TextBox box, int nSpaces)
         {
             //EM_SETTABSTOPS - http://msdn.microsoft.com/en-us/library/bb761663%28VS.85%29.aspx
