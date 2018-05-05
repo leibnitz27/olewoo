@@ -87,7 +87,17 @@ namespace Org.Benf.OleWoo.Typelib
             ih.AppendLine("{");
             using (new IDLHelperTab(ih))
             {
-                // How do I know I'm importing stdole2??!
+                var lmd = new TypeLibMetadata();
+                var l = lmd.GetDependentLibraries(_tlib);
+                foreach (var dl in l)
+                {
+                    var attr = new TypeLibAttr(dl);
+
+                    ih.AppendLine($"// Tlib : {dl.GetName()} : {{{attr.guid}}}");
+                    ih.AppendLine($"importlib(\"{dl.GetName()}\");");
+                }
+                ih.AppendLine(string.Empty);
+
                 // Forward declare all interfaces.
                 ih.AppendLine("// Forward declare all types defined in this typelib");
                 /* 
@@ -101,7 +111,7 @@ namespace Org.Benf.OleWoo.Typelib
                         return x;
                     });
                 Children.FindAll(x => ((x as OWInterface) != null || (x as OWDispInterface) != null)).ForEach(
-                    x => ih.AppendLine(x.Name)
+                    x => ih.AppendLine(string.Concat(x.Name, ";"))
                         );
                 Children.FindAll(x => x.DisplayAtTLBLevel(interfaceNames)).ForEach(
                    x => { x.BuildIDLInto(ih); ih.AppendLine(""); }
