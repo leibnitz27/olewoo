@@ -1,12 +1,15 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices.ComTypes;
 using olewoo_interop;
+using Org.Benf.OleWoo.Listeners;
 
 namespace Org.Benf.OleWoo.Typelib
 {
     public abstract class ITlibNode
     {
         public delegate List<ITlibNode> dlgCreateChildren();
+
+        public IEnumerable<ITypeLibListener> Listeners { get; set; }
 
         public enum ImageIndices
         {
@@ -40,7 +43,11 @@ namespace Org.Benf.OleWoo.Typelib
                 if (_children == null)
                 {
                     _children = GenChildren();
-                    for (var i = 0; i < _children.Count; ++i) _children[i].Idx = i;
+                    for (var i = 0; i < _children.Count; ++i)
+                    {
+                        _children[i].Idx = i;
+                        _children[i].Listeners = Listeners;
+                    }
                 }
                 return _children;
             }

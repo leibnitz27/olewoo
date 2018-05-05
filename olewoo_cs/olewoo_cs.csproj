@@ -106,6 +106,7 @@
     <Compile Include="GuiMisc\UpdateSuspender.cs" />
     <Compile Include="GuiMisc\TbUpdateSuspender.cs" />
     <Compile Include="IDLHelper.cs" />
+    <Compile Include="Listeners\TypeLibListener.cs" />
     <Compile Include="MRUList.cs" />
     <Compile Include="GuiElem\OleWoo.cs">
       <SubType>Form</SubType>
