@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
+using Microsoft.Win32;
 using olewoo_interop;
 
 // ReSharper disable InconsistentNaming
@@ -92,9 +94,17 @@ namespace Org.Benf.OleWoo.Typelib
                 foreach (var dl in l)
                 {
                     var attr = new TypeLibAttr(dl);
-
-                    ih.AppendLine($"// Tlib : {dl.GetName()} : {{{attr.guid}}}");
-                    ih.AppendLine($"importlib(\"{dl.GetName()}\");");
+                    var hive = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default);
+                    var libKey = hive.OpenSubKey($"TypeLib\\{{{attr.guid}}}\\{attr.wMajorVerNum}.{attr.wMinorVerNum}");
+                    var longName = libKey?.GetValue(null);
+                    if (longName != null)
+                    {
+                        longName = string.Concat(", ", longName);
+                    }
+                    var tlbKey = libKey?.OpenSubKey($"{attr.lcid}\\win32") ?? libKey?.OpenSubKey($"{attr.lcid}\\win64");
+                    var path = tlbKey?.GetValue(null) as string;
+                    ih.AppendLine($"// Tlib : {dl.GetName()}{longName} : {{{attr.guid}}}");
+                    ih.AppendLine($"importlib(\"{path ?? dl.GetName()}\");");
                 }
                 ih.AppendLine(string.Empty);
 

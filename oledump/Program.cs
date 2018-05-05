@@ -28,6 +28,7 @@ namespace Org.Benf.OleDump
                 System.Console.WriteLine("OleDump:\r\n");
                 System.Console.Error.WriteLine("Error : " + e.Message);
             }
+            System.Console.ReadKey();
         }
     }
 }

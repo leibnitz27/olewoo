@@ -149,8 +149,20 @@ namespace olewoo_interop {
 				return MkSystemGuid(_plibAttr->guid);
 			}
 		}
-//    LCID lcid;
-//    SYSKIND syskind;
+		property int lcid
+		{
+			int get()
+			{
+				return _plibAttr->lcid;
+			}
+		}
+		property int syskind
+		{
+			int get()
+			{
+				return _plibAttr->syskind;
+			}
+		}
 		property int wMajorVerNum
 		{
 			int get()
