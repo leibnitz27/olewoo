@@ -1,5 +1,8 @@
 // olewoo_interop.h
 
+#include "stdafx.h"
+#include "typelibdependencies.h"
+#include <unordered_set>
 #include "atlbase.h"
 #include <string>
 #pragma once
@@ -8,6 +11,38 @@ using namespace System;
 
 namespace olewoo_interop {
 
+	public ref class TypeLibMetadata
+	{
+	public:
+		System::Collections::Generic::List<System::Runtime::InteropServices::ComTypes::ITypeLib^>^ GetDependentLibraries(System::Runtime::InteropServices::ComTypes::ITypeLib^ ptypeLib)
+		{
+			auto list = gcnew System::Collections::Generic::List<System::Runtime::InteropServices::ComTypes::ITypeLib^>();
+			System::IntPtr ip;
+			try {
+				ip = System::Runtime::InteropServices::Marshal::GetIUnknownForObject(ptypeLib);
+				ITypeLib* pitl = static_cast<ITypeLib*>(ip.ToPointer());
+				auto set = GetDependencies(pitl);
+				for (const auto& elem : set) {
+					auto ptr = elem.GetInterfacePtr();
+					auto intPtr = System::IntPtr(ptr);
+					auto obj = System::Runtime::InteropServices::Marshal::GetObjectForIUnknown(intPtr);
+					auto lib = static_cast<System::Runtime::InteropServices::ComTypes::ITypeLib^>(obj);
+					list->Add(lib);
+				}
+			}
+			catch (...)
+			{
+				// oh well
+			}
+
+			if (ip != System::IntPtr::Zero)
+			{
+				System::Runtime::InteropServices::Marshal::Release(ip);
+			}
+			return list;
+		}
+	};
+
 	public ref class IDLFormatter_iop abstract
 	{
 	public:
@@ -15,61 +50,8 @@ namespace olewoo_interop {
 		virtual void AddLink(System::String ^ s, System::String ^ s2) = 0;
 	};
 
-	public ref class CustomTypeLibData
-	{
-		System::String^ _libName;
-		System::Guid^ _libGuid;
-		DWORD _majorVersion;
-		DWORD _minorVersion;
-	public:
-		property System::String^ LibName
-		{
-			System::String^ get()
-			{
-				return _libName;
-			}
-			void set(System::String^ value)
-			{
-				_libName = value;
-			}
-		}
-		property System::Guid^ LibGuid
-		{
-			System::Guid^ get()
-			{
-				return _libGuid;
-			}
-			void set(System::Guid^ value)
-			{
-				_libGuid = value;
-			}
-		}
-		property DWORD MajorVersion
-		{
-			DWORD get()
-			{
-				return _majorVersion;
-			}
-			void set(DWORD value)
-			{
-				_majorVersion = value;
-			}
-		}
-		property DWORD MinorVersion
-		{
-			DWORD get()
-			{
-				return _minorVersion;
-			}
-			void set(DWORD value)
-			{
-				_minorVersion = value;
-			}
-		}
-	};
-
 	System::Guid MkSystemGuid(GUID & graw);
-	void stringifyTypeDesc(TYPEDESC* typeDesc, ITypeInfo* pTypeInfo, IDLFormatter_iop ^ ift, CustomTypeLibData ^ custLibData);
+	void stringifyTypeDesc(TYPEDESC* typeDesc, ITypeInfo* pTypeInfo, IDLFormatter_iop ^ ift);
 
 	public ref class CustomData
 	{
@@ -200,12 +182,12 @@ namespace olewoo_interop {
 		{
 			m_ptd = &td;
 		}
-		void ComTypeNameAsString(System::Runtime::InteropServices::ComTypes::ITypeInfo ^ ti, IDLFormatter_iop ^ ift, CustomTypeLibData ^ custLibData)
+		void ComTypeNameAsString(System::Runtime::InteropServices::ComTypes::ITypeInfo ^ ti, IDLFormatter_iop ^ ift)
 		{
 			CComVariant tmp;
 			System::Runtime::InteropServices::Marshal::GetNativeVariantForObject(ti, System::IntPtr(&tmp));
 			CComQIPtr<ITypeInfo> titmp = tmp.punkVal;
-			stringifyTypeDesc(m_ptd, titmp, ift, custLibData);
+			stringifyTypeDesc(m_ptd, titmp, ift);
 		}
 		property int hreftype
 		{

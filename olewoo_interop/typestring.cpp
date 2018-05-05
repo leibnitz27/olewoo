@@ -13,12 +13,10 @@
 
 using namespace olewoo_interop;
 
-
-
 namespace olewoo_interop
 {
 
-void stringifyCustomType(HREFTYPE refType, ITypeInfo* pti, IDLFormatter_iop ^ ift, CustomTypeLibData ^ custLibData) 
+void stringifyCustomType(HREFTYPE refType, ITypeInfo* pti, IDLFormatter_iop ^ ift) 
 {
     CComPtr<ITypeInfo> pTypeInfo(pti);
     CComPtr<ITypeInfo> pCustTypeInfo;
@@ -35,30 +33,6 @@ void stringifyCustomType(HREFTYPE refType, ITypeInfo* pti, IDLFormatter_iop ^ if
 		ift->AddString("UnknownCustomType");
 		return;
 	}
-	ITypeLib* pCustTypeLib;
-	UINT uIndex;
-	hr = pCustTypeInfo->GetContainingTypeLib(&pCustTypeLib, &uIndex);
-	if (SUCCEEDED(hr))
-	{
-		CComBSTR bstrLib;
-		hr = pCustTypeLib->GetDocumentation(-1, &bstrLib, 0, 0, 0);
-		if (SUCCEEDED(hr))
-		{
-			LPTLIBATTR attr;
-			hr = pCustTypeLib->GetLibAttr(&attr);
-			if (SUCCEEDED(hr))
-			{
-				CustomTypeLibData^ data = gcnew CustomTypeLibData();
-				
-				data->LibName = msclr::interop::marshal_as<System::String^>(bstrLib.m_str);
-				data->LibGuid = MkSystemGuid(attr->guid);
-				data->MajorVersion = attr->wMajorVerNum;
-				data->MinorVersion = attr->wMinorVerNum;
-
-				pCustTypeLib->ReleaseTLibAttr(attr);
-			}
-		}
-	}
     char ansiType[MAX_PATH];
     WideCharToMultiByte(CP_ACP, 0, bstrType, bstrType.Length() + 1, 
         ansiType, MAX_PATH, 0, 0);
@@ -66,21 +40,21 @@ void stringifyCustomType(HREFTYPE refType, ITypeInfo* pti, IDLFormatter_iop ^ if
 	return;
 }
 
-void stringifyTypeDesc(TYPEDESC* typeDesc, ITypeInfo* pTypeInfo, IDLFormatter_iop ^ ift, CustomTypeLibData ^ custLibData) {
+void stringifyTypeDesc(TYPEDESC* typeDesc, ITypeInfo* pTypeInfo, IDLFormatter_iop ^ ift) {
     if(typeDesc->vt == VT_PTR) 
 	{
-        stringifyTypeDesc(typeDesc->lptdesc, pTypeInfo, ift, custLibData);
+        stringifyTypeDesc(typeDesc->lptdesc, pTypeInfo, ift);
 		ift->AddString("*");
 		return;
     }
     if(typeDesc->vt == VT_SAFEARRAY) {
         ift->AddString("SAFEARRAY(");
-        stringifyTypeDesc(typeDesc->lptdesc, pTypeInfo, ift, custLibData);
+        stringifyTypeDesc(typeDesc->lptdesc, pTypeInfo, ift);
 		ift->AddString(")");
 		return;
     }
     if(typeDesc->vt == VT_CARRAY) {
-        stringifyTypeDesc(&typeDesc->lpadesc->tdescElem, pTypeInfo, ift, custLibData);
+        stringifyTypeDesc(&typeDesc->lpadesc->tdescElem, pTypeInfo, ift);
         for(int dim(0); typeDesc->lpadesc->cDims; ++dim) 
 		{
 			std::stringstream oss;
@@ -92,7 +66,7 @@ void stringifyTypeDesc(TYPEDESC* typeDesc, ITypeInfo* pTypeInfo, IDLFormatter_io
 		return;
     }
     if(typeDesc->vt == VT_USERDEFINED) {
-        stringifyCustomType(typeDesc->hreftype, pTypeInfo, ift, custLibData);
+        stringifyCustomType(typeDesc->hreftype, pTypeInfo, ift);
         return;
     }
     
