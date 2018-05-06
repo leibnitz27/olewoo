@@ -36,5 +36,10 @@ namespace Org.Benf.OleWoo.Typelib
                 using (new IDLHelperTab(ih)) meths.ForEach(x => x.BuildIDLInto(ih, true));
             }
         }
+
+        public override List<string> GetAttributes()
+        {
+            return new List<string>();
+        }
     }
 }

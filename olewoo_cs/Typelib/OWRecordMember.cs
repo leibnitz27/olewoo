@@ -37,5 +37,10 @@ namespace Org.Benf.OleWoo.Typelib
         {
             ih.AppendLine(Name + ";");
         }
+
+        public override List<string> GetAttributes()
+        {
+            return new List<string>();
+        }
     }
 }

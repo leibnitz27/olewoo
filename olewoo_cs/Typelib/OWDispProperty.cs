@@ -40,16 +40,7 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public void BuildIDLInto(IDLFormatter ih, bool embedded)
         {
-            var memIdInSpecialRange = (_vd.memid >= 0x60000000 && _vd.memid < 0x60020000);
-            var lprops = new List<string>();
-            if (!memIdInSpecialRange)
-            {
-                lprops.Add("id(" + _vd.memid.PaddedHex() + ")");
-            }
-            var help = _ti.GetHelpDocumentationById(_vd.memid, out var context);
-//            if (0 != (_vd.wFuncFlags & FuncDesc.FuncFlags.FUNCFLAG_FRESTRICTED)) lprops.Add("restricted");
-//            if (0 != (_vd.wFuncFlags & FuncDesc.FuncFlags.FUNCFLAG_FHIDDEN)) lprops.Add("hidden");
-            AddHelpStringAndContext(lprops, help, context);
+            var lprops = GetAttributes();
             ih.AppendLine("[" + string.Join(", ", lprops.ToArray()) + "] ");
             // Prototype in a different line.
             var ed = _vd.elemDescVar;
@@ -64,6 +55,23 @@ namespace Org.Benf.OleWoo.Typelib
         public override void BuildIDLInto(IDLFormatter ih)
         {
             BuildIDLInto(ih, false);
+        }
+
+        private bool MemIdInSpecialRange => (_vd.memid >= 0x60000000 && _vd.memid < 0x60020000);
+
+        public override List<string> GetAttributes()
+        {
+            var lprops = new List<string>();
+            if (!MemIdInSpecialRange)
+            {
+                lprops.Add("id(" + _vd.memid.PaddedHex() + ")");
+            }
+            var help = _ti.GetHelpDocumentationById(_vd.memid, out var context);
+            //            if (0 != (_vd.wFuncFlags & FuncDesc.FuncFlags.FUNCFLAG_FRESTRICTED)) lprops.Add("restricted");
+            //            if (0 != (_vd.wFuncFlags & FuncDesc.FuncFlags.FUNCFLAG_FHIDDEN)) lprops.Add("hidden");
+            AddHelpStringAndContext(lprops, help, context);
+
+            return lprops;
         }
     }
 }

@@ -63,5 +63,10 @@ namespace Org.Benf.OleWoo.Typelib
         {
             BuildIDLInto(ih, false, false);
         }
+
+        public override List<string> GetAttributes()
+        {
+            return new List<string>();
+        }
     }
 }

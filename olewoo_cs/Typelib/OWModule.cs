@@ -78,6 +78,20 @@ namespace Org.Benf.OleWoo.Typelib
                 ih.AppendLine("// ");
             }
             ih.AppendLine("[");
+            var liba = GetAttributes();
+            var cnt = 0;
+            liba.ForEach(x => ih.AppendLine("  " + x + (++cnt == liba.Count ? "" : ",")));
+            ih.AppendLine("]");
+            ih.AppendLine("module " + _name + " {");
+            using (new IDLHelperTab(ih))
+            {
+                Children.ForEach(x => x.BuildIDLInto(ih));
+            }
+            ih.AppendLine("};");
+        }
+
+        public override List<string> GetAttributes()
+        {
             var liba = new List<string>
             {
                 "dllname(\"" + (string.IsNullOrEmpty(_dllname) ? "<no entry points>" : _dllname) + "\")"
@@ -88,15 +102,7 @@ namespace Org.Benf.OleWoo.Typelib
             if (!string.IsNullOrEmpty(help)) liba.Add("helpstring(\"" + help + "\")");
             if (cnt != 0) liba.Add("helpcontext(" + cnt.PaddedHex() + ")");
 
-            cnt = 0;
-            liba.ForEach(x => ih.AppendLine("  " + x + (++cnt == liba.Count ? "" : ",")));
-            ih.AppendLine("]");
-            ih.AppendLine("module " + _name + " {");
-            using (new IDLHelperTab(ih))
-            {
-                Children.ForEach(x => x.BuildIDLInto(ih));
-            }
-            ih.AppendLine("};");
+            return liba;
         }
     }
 }

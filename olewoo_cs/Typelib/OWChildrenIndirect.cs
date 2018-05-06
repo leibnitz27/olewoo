@@ -32,5 +32,10 @@ namespace Org.Benf.OleWoo.Typelib
         {
             Children.ForEach(x => x.BuildIDLInto(ih));
         }
+
+        public override List<string> GetAttributes()
+        {
+            return new List<string>();
+        }
     }
 }

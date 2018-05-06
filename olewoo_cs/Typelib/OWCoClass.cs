@@ -23,6 +23,16 @@ namespace Org.Benf.OleWoo.Typelib
         public override string ObjectName => $"{_name}#c";
 
         public override string ShortName => _name;
+        public override List<string> GetAttributes()
+        {
+            var lprops = new List<string> { $"uuid({_ta.guid})" };
+            var ta = new TypeAttr(_ti);
+            lprops.Add($"version({ta.wMajorVerNum}.{ta.wMinorVerNum})");
+            OWCustData.GetCustData(_ti, ref lprops);
+            var help = _ti.GetHelpDocumentationById(-1, out var context);
+            AddHelpStringAndContext(lprops, help, context);
+            return lprops;
+        }
 
         public override bool DisplayAtTLBLevel(ICollection<string> interfaceNames) => true;
 
@@ -44,12 +54,7 @@ namespace Org.Benf.OleWoo.Typelib
         public override void BuildIDLInto(IDLFormatter ih)
         {
             ih.AppendLine("[");
-            var lprops = new List<string> {$"uuid({_ta.guid})"};
-            var ta = new TypeAttr(_ti);
-            lprops.Add($"version({ta.wMajorVerNum}.{ta.wMinorVerNum})");
-            OWCustData.GetCustData(_ti, ref lprops);
-            var help = _ti.GetHelpDocumentationById(-1, out var context);
-            AddHelpStringAndContext(lprops, help, context);
+            var lprops = GetAttributes();
             for (var i = 0; i < lprops.Count; ++i)
             {
                 ih.AppendLine("  " + lprops[i] + (i < (lprops.Count - 1) ? "," : ""));

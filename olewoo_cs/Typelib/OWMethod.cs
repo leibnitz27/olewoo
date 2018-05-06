@@ -26,6 +26,36 @@ namespace Org.Benf.OleWoo.Typelib
 
         public override string ObjectName => $"{_name}#m";
 
+        public override List<string> GetAttributes()
+        {
+            var lprops = new List<string>();
+            if (!MemIdInSpecialRange)
+            {
+                lprops.Add("id(" + _fd.memid.PaddedHex() + ")");
+            }
+            switch (_fd.invkind)
+            {
+                case FuncDesc.InvokeKind.INVOKE_PROPERTYGET:
+                    lprops.Add("propget");
+                    break;
+                case FuncDesc.InvokeKind.INVOKE_PROPERTYPUT:
+                    lprops.Add("propput");
+                    break;
+                case FuncDesc.InvokeKind.INVOKE_PROPERTYPUTREF:
+                    lprops.Add("propputref");
+                    break;
+            }
+            OWCustData.GetAllFuncCustData(_fd.memid - 1, _ti, ref lprops);
+            var help = _ti.GetHelpDocumentationById(_fd.memid, out var context);
+            if (0 != (_fd.wFuncFlags & FuncDesc.FuncFlags.FUNCFLAG_FRESTRICTED)) lprops.Add("restricted");
+            if (0 != (_fd.wFuncFlags & FuncDesc.FuncFlags.FUNCFLAG_FHIDDEN)) lprops.Add("hidden");
+            AddHelpStringAndContext(lprops, help, context);
+
+            return lprops;
+        }
+
+        private bool MemIdInSpecialRange => (_fd.memid >= 0x60000000 && _fd.memid < 0x60020000);
+
         public override bool DisplayAtTLBLevel(ICollection<string> interfaceNames) => false;
 
         public override int ImageIndex => (int)ImageIndices.idx_method;
@@ -54,29 +84,7 @@ namespace Org.Benf.OleWoo.Typelib
 
         public void BuildIDLInto(IDLFormatter ih, bool bAsDispatch)
         {
-            var memIdInSpecialRange = (_fd.memid >= 0x60000000 && _fd.memid < 0x60020000);
-            var lprops = new List<string>();
-            if (!memIdInSpecialRange)
-            {
-                lprops.Add("id(" + _fd.memid.PaddedHex() + ")");
-            }
-            switch (_fd.invkind)
-            {
-                case FuncDesc.InvokeKind.INVOKE_PROPERTYGET:
-                    lprops.Add("propget");
-                    break;
-                case FuncDesc.InvokeKind.INVOKE_PROPERTYPUT:
-                    lprops.Add("propput");
-                    break;
-                case FuncDesc.InvokeKind.INVOKE_PROPERTYPUTREF:
-                    lprops.Add("propputref");
-                    break;
-            }
-            OWCustData.GetAllFuncCustData(_fd.memid -1, _ti, ref lprops);
-            var help = _ti.GetHelpDocumentationById(_fd.memid, out var context);
-            if (0 != (_fd.wFuncFlags & FuncDesc.FuncFlags.FUNCFLAG_FRESTRICTED)) lprops.Add("restricted");
-            if (0 != (_fd.wFuncFlags & FuncDesc.FuncFlags.FUNCFLAG_FHIDDEN)) lprops.Add("hidden");
-            AddHelpStringAndContext(lprops, help, context);
+            var lprops = GetAttributes();
             ih.AppendLine("[" + string.Join(", ", lprops.ToArray()) + "] ");
             // Prototype in a different line.
             var ed = _fd.elemdescFunc;
@@ -104,7 +112,7 @@ namespace Org.Benf.OleWoo.Typelib
                 };
             }
             (bRetvalPresent ? elast : ed).tdesc.ComTypeNameAsString(_ti, ih);
-            if (memIdInSpecialRange)
+            if (MemIdInSpecialRange)
             {
                 ih.AddString(" " + _fd.callconv.ToString().Substring(2).ToLower());
             }

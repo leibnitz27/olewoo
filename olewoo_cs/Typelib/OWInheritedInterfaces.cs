@@ -44,5 +44,10 @@ namespace Org.Benf.OleWoo.Typelib
         {
             ih.AppendLine("");
         }
+
+        public override List<string> GetAttributes()
+        {
+            return new List<string>();
+        }
     }
 }

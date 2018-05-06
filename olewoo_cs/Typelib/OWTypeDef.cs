@@ -39,7 +39,16 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public override void BuildIDLInto(IDLFormatter ih)
         {
-            ih.AppendLine("typedef [public] " + _name + ";");
+            var lprops = GetAttributes();
+            ih.AppendLine("typedef [" + string.Join(", ", lprops.ToArray()) + "] " + _name + ";");
+        }
+
+        public override List<string> GetAttributes()
+        {
+            return new List<string>
+            {
+                "public"
+            };
         }
     }
 }

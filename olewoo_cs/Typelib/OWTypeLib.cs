@@ -16,6 +16,7 @@ namespace Org.Benf.OleWoo.Typelib
     {
         private ITypeLib _tlib;
         private readonly string _name;
+        private readonly IDLData _data;
 
         public OWTypeLib(string path)
         {
@@ -23,6 +24,30 @@ namespace Org.Benf.OleWoo.Typelib
             if (_tlib == null) throw new Exception(path + " is not a loadable typelibrary.");
             _name = _tlib.GetName();
             _name += " (" + _tlib.GetHelpDocumentation(out _) + ")";
+
+            _data = new IDLData(this);
+        }
+
+        public override List<string> GetAttributes()
+        {
+            var liba = new List<string>();
+            using (var tla = new TypeLibAttr(_tlib))
+            {
+                liba.Add($"uuid({tla.guid})");
+                liba.Add($"version({tla.wMajorVerNum}.{tla.wMinorVerNum})");
+            }
+            var cds = new CustomDatas(_tlib as ITypeLib2);
+            {
+                foreach (var cd in cds.Items)
+                {
+                    liba.Add("custom(" + cd.guid + ", " + ITypeInfoXtra.QuoteString(cd.varValue) + ")");
+                }
+            }
+            var help = _tlib.GetHelpDocumentation(out var cnt);
+            if (!string.IsNullOrEmpty(help)) liba.Add($"helpstring(\"{help}\")");
+            if (cnt != 0) liba.Add($"helpcontext({cnt.PaddedHex()})");
+
+            return liba;
         }
 
         public void ClearUp()
@@ -65,24 +90,9 @@ namespace Org.Benf.OleWoo.Typelib
 
             ih.AppendLine("// Generated .IDL file (by OleWoo)");
             ih.AppendLine("[");
-            var liba = new List<string>();
-            using (var tla = new TypeLibAttr(_tlib))
-            {
-                liba.Add($"uuid({tla.guid})");
-                liba.Add($"version({tla.wMajorVerNum}.{tla.wMinorVerNum})");
-            }
-            var cds = new CustomDatas(_tlib as ITypeLib2);
-            {
-                foreach (var cd in cds.Items)
-                {
-                    liba.Add("custom(" + cd.guid + ", " + ITypeInfoXtra.QuoteString(cd.varValue) + ")");
-                }
-            }
-            var help = _tlib.GetHelpDocumentation(out var cnt);
-            if (!string.IsNullOrEmpty(help)) liba.Add($"helpstring(\"{help}\")");
-            if (cnt != 0) liba.Add($"helpcontext({cnt.PaddedHex()})");
 
-            cnt = 0;
+            var liba = GetAttributes();
+            var cnt = 0;
             liba.ForEach( x => ih.AppendLine("  " + x + (++cnt == liba.Count ? "" : ",")) );
             ih.AppendLine("]");
             ih.AppendLine("library " + ShortName);

@@ -114,8 +114,6 @@ namespace Org.Benf.OleWoo.Typelib
 
         }
 
-        public abstract IList<string> GetAttributes();
-
-        public abstract string TypeName();
+        public abstract List<string> GetAttributes();
     }
 }

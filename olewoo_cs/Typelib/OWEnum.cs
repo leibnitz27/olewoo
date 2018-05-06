@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using olewoo_interop;
 
@@ -45,7 +46,8 @@ namespace Org.Benf.OleWoo.Typelib
 
             if (!_ta.guid.Equals(Guid.Empty))
             {
-                tde += "[uuid(" + _ta.guid + "), version(" + _ta.wMajorVerNum + "." + _ta.wMinorVerNum + ")]";
+                var lprops = GetAttributes();
+                tde += "[" + string.Join(",", lprops) + "]";
                 ih.AppendLine(tde);
                 tde = "";
             }
@@ -56,6 +58,14 @@ namespace Org.Benf.OleWoo.Typelib
                 Children.ForEach(x => ((OWEnumValue) x).BuildIDLInto(ih, true, ++idx == _ta.cVars));
             }
             ih.AppendLine("} " + _name + ";");
+        }
+
+        public override List<string> GetAttributes()
+        {
+            var lprops = new List<string>();
+            lprops.Add("uuid(" + _ta.guid + ")");
+            lprops.Add("version(" + _ta.wMajorVerNum + "." + _ta.wMinorVerNum + ")");
+            return lprops;
         }
     }
 }

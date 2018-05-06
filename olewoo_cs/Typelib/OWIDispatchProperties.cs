@@ -34,5 +34,10 @@ namespace Org.Benf.OleWoo.Typelib
             ih.AppendLine("properties:");
             if (props.Count > 0) using (new IDLHelperTab(ih)) props.ForEach(x => x.BuildIDLInto(ih, true));
         }
+
+        public override List<string> GetAttributes()
+        {
+            return new List<string>();
+        }
     }
 }
