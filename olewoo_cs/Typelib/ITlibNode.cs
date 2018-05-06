@@ -113,5 +113,9 @@ namespace Org.Benf.OleWoo.Typelib
             if (context != 0) lprops.Add("helpcontext(" + context.PaddedHex() + ")");
 
         }
+
+        public abstract IList<string> GetAttributes();
+
+        public abstract string TypeName();
     }
 }

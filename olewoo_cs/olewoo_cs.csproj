@@ -115,6 +115,7 @@
       <DependentUpon>OleWoo.cs</DependentUpon>
     </Compile>
     <Compile Include="Typelib\IClearUp.cs" />
+    <Compile Include="Typelib\IDLData.cs" />
     <Compile Include="Typelib\IDLGrabber.cs" />
     <Compile Include="Typelib\ITlibNode.cs" />
     <Compile Include="Typelib\ITypeInfoXtra.cs" />
