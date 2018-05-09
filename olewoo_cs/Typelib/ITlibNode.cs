@@ -9,7 +9,7 @@ namespace Org.Benf.OleWoo.Typelib
     {
         public delegate List<ITlibNode> dlgCreateChildren();
 
-        public IEnumerable<ITypeLibListener> Listeners { get; set; }
+        public IList<ITypeLibListener> Listeners { get; set; }
 
         public enum ImageIndices
         {
