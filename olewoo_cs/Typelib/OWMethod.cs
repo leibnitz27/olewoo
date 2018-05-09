@@ -144,5 +144,20 @@ namespace Org.Benf.OleWoo.Typelib
                     break;
             }
         }
+        public override void EnterElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.EnterMethod(this);
+            }
+        }
+
+        public override void ExitElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.ExitMethod(this);
+            }
+        }
     }
 }

@@ -70,5 +70,20 @@ namespace Org.Benf.OleWoo.Typelib
             lprops.Add("version(" + _ta.wMajorVerNum + "." + _ta.wMinorVerNum + ")");
             return lprops;
         }
+        public override void EnterElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.EnterEnum(this);
+            }
+        }
+
+        public override void ExitElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.ExitEnum(this);
+            }
+        }
     }
 }

@@ -50,5 +50,20 @@ namespace Org.Benf.OleWoo.Typelib
         {
             return new List<string>();
         }
+        public override void EnterElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.EnterInheritedInterfaces(this);
+            }
+        }
+
+        public override void ExitElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.ExitInheritedInterfaces(this);
+            }
+        }
     }
 }

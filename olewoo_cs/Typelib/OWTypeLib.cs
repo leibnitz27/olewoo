@@ -89,7 +89,7 @@ namespace Org.Benf.OleWoo.Typelib
 
             ih.AppendLine("// Generated .IDL file (by OleWoo)");
             ih.AppendLine("[");
-
+            
             var liba = GetAttributes();
             var cnt = 0;
             liba.ForEach( x => ih.AppendLine("  " + x + (++cnt == liba.Count ? "" : ",")) );
@@ -139,6 +139,21 @@ namespace Org.Benf.OleWoo.Typelib
             ih.AppendLine("};");
         }
 
+        public override void EnterElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.EnterTypeLib(this);
+            }
+        }
+
+        public override void ExitElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.ExitTypeLib(this);
+            }
+        }
     }
 
     /*

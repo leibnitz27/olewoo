@@ -77,5 +77,20 @@ namespace Org.Benf.OleWoo.Typelib
 
             return lprops;
         }
+        public override void EnterElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.EnterDispProperty(this);
+            }
+        }
+
+        public override void ExitElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.ExitDispProperty(this);
+            }
+        }
     }
 }

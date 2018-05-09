@@ -54,5 +54,20 @@ namespace Org.Benf.OleWoo.Typelib
         {
             return new List<string>();
         }
+        public override void EnterElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.EnterRecord(this);
+            }
+        }
+
+        public override void ExitElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.ExitRecord(this);
+            }
+        }
     }
 }

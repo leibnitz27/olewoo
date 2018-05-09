@@ -97,5 +97,20 @@ namespace Org.Benf.OleWoo.Typelib
             }
             ih.AppendLine("};");
         }
+        public override void EnterElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.EnterInterface(this);
+            }
+        }
+
+        public override void ExitElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.ExitInterface(this);
+            }
+        }
     }
 }

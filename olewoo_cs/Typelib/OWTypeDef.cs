@@ -52,5 +52,21 @@ namespace Org.Benf.OleWoo.Typelib
                 "public"
             };
         }
+
+        public override void EnterElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.EnterTypeDef(this);
+            }
+        }
+
+        public override void ExitElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.ExitTypeDef(this);
+            }
+        }
     }
 }

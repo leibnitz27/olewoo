@@ -115,5 +115,8 @@ namespace Org.Benf.OleWoo.Typelib
         }
 
         public abstract List<string> GetAttributes();
+
+        public abstract void EnterElement();
+        public abstract void ExitElement();
     }
 }
