@@ -10,6 +10,8 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly VarDesc _vd;
         private readonly ITypeInfo _ti;
         private readonly int _val;
+        private readonly IDLData _data;
+
         public OWEnumValue(ITlibNode parent, ITypeInfo ti, VarDesc vd)
         {
             Parent = parent;
@@ -17,7 +19,9 @@ namespace Org.Benf.OleWoo.Typelib
             _val = (int)vd.varValue;
             _vd = vd;
             _ti = ti;
+            _data = new IDLData(this);
         }
+
         public override string Name => "const int " + _name + " = " + _val;
         public override string ShortName => _name;
         public override string ObjectName => null;

@@ -10,6 +10,7 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly string _name;
         private readonly FuncDesc _fd;
         private readonly ITypeInfo _ti;
+        private readonly IDLData _data;
 
         public OWMethod(ITlibNode parent, ITypeInfo ti, FuncDesc fd)
         {
@@ -19,7 +20,9 @@ namespace Org.Benf.OleWoo.Typelib
 
             var names = fd.GetNames(ti);
             _name = names[0];
+            _data= new IDLData(this);
         }
+
         public override string Name => _name;
 
         public override string ShortName => _name;

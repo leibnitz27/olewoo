@@ -10,6 +10,7 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly int _idx;
         private readonly string _name;
         private readonly object _val;
+        private readonly IDLData _data;
 
         public OWModuleConst(ITlibNode parent, ITypeInfo ti, VarDesc vd, int idx)
         {
@@ -23,6 +24,7 @@ namespace Org.Benf.OleWoo.Typelib
             {
                 _val = (_val as string).ReEscape();
             }
+            _data = new IDLData(this);
         }
         public override string Name => "const " + _name + " = " + _val;
         public override string ShortName => _name;

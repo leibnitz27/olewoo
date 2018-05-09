@@ -8,6 +8,7 @@ namespace Org.Benf.OleWoo.Typelib
     {
         private readonly string _type;
         private readonly string _name;
+        private readonly IDLData _data;
 
         public OWRecordMember(ITlibNode parent, ITypeInfo ti, VarDesc vd)
         {
@@ -16,6 +17,7 @@ namespace Org.Benf.OleWoo.Typelib
             var ig = new IDLGrabber();
             vd.elemDescVar.tdesc.ComTypeNameAsString(ti, ig);
             _type = ig.Value;
+            _data = new IDLData(this);
         }
         public override string Name => _type + " " + _name;
         public override string ShortName => _name;

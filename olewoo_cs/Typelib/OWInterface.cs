@@ -10,6 +10,7 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly TypeAttr _ta;
         private readonly ITypeInfo _ti;
         private readonly bool _topLevel;
+        private readonly IDLData _data;
 
         public OWInterface(ITlibNode parent, ITypeInfo ti, TypeAttr ta, bool topLevel)
         {
@@ -18,7 +19,9 @@ namespace Org.Benf.OleWoo.Typelib
             _ta = ta;
             _ti = ti;
             _topLevel = topLevel;
+            _data = new IDLData(this);
         }
+
         public override int ImageIndex => (int)ImageIndices.idx_interface; 
 
         public override string Name => (_topLevel ? "interface " : "") + _name;

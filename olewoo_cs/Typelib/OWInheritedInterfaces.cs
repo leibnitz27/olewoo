@@ -9,6 +9,7 @@ namespace Org.Benf.OleWoo.Typelib
     {
         protected TypeAttr _ta;
         protected ITypeInfo _ti;
+
         public OWInheritedInterfaces(ITlibNode parent, ITypeInfo ti, TypeAttr ta)
         {
             Parent = parent;

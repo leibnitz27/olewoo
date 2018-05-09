@@ -10,6 +10,7 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly TypeAttr _ta;
         private readonly ITypeInfo _ti;
         private readonly bool _topLevel;
+        private readonly IDLData _data;
 
         private OWIDispatchMethods _methodChildren;
         private OWIDispatchProperties _propChildren;
@@ -21,7 +22,9 @@ namespace Org.Benf.OleWoo.Typelib
             _ta = ta;
             _ti = ti;
             _topLevel = topLevel;
+            _data = new IDLData(this);
         }
+
         public override string Name => (_topLevel ? "dispinterface " : "") + _name;
 
         public override string ShortName => _name;

@@ -9,12 +9,15 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly string _name;
         private readonly ITypeInfo _ti;
         private readonly TypeAttr _ta;
+        private readonly IDLData _data;
+
         public OWRecord(ITlibNode parent, ITypeInfo ti, TypeAttr ta)
         {
             Parent = parent;
             _ti = ti;
             _ta = ta;
             _name = _ti.GetName();
+            _data = new IDLData(this);
         }
         public override string Name => "typedef struct " + _name;
         public override string ShortName => _name;

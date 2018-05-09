@@ -9,13 +9,17 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly string _name;
         private readonly VarDesc _vd;
         private readonly ITypeInfo _ti;
+        private readonly IDLData _data;
+
         public OWDispProperty(ITlibNode parent, ITypeInfo ti, VarDesc vd)
         {
             Parent = parent;
             _name = ti.GetDocumentationById(vd.memid);
             _vd = vd;
             _ti = ti;
+            _data = new IDLData(this);
         }
+
         public override string Name => _name;
         public override string ShortName => _name;
         public override string ObjectName => null;

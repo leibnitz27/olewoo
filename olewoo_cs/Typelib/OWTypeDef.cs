@@ -9,6 +9,7 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly ITypeInfo _ti;
         private readonly TypeAttr _ta;
         private readonly string _name;
+        private readonly IDLData _data;
 
         public OWTypeDef(ITlibNode parent, ITypeInfo ti, TypeAttr ta)
         {
@@ -17,7 +18,8 @@ namespace Org.Benf.OleWoo.Typelib
             _ti = ti;
 
             _ti.GetRefTypeInfo(_ta.tdescAlias.hreftype, out var oti);
-            _name = oti.GetName() + " " + ti.GetName();        
+            _name = oti.GetName() + " " + ti.GetName();
+            _data = new IDLData(this);
         }
         public override string Name => "typedef " + _name;
         public override string ShortName => _name;

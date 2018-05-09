@@ -12,13 +12,17 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly string _name;
         private readonly TypeAttr _ta;
         private readonly ITypeInfo _ti;
+        private readonly IDLData _data;
+
         public OWCoClass(ITlibNode parent, ITypeInfo ti, TypeAttr ta)
         {
             Parent = parent;
             _name = ti.GetName();
             _ta = ta;
             _ti = ti;
+            _data = new IDLData(this);
         }
+
         public override string Name => $"coclass{_name}";
         public override string ObjectName => $"{_name}#c";
 

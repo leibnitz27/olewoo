@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using olewoo_interop;
 
@@ -11,13 +10,17 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly string _name;
         private readonly TypeAttr _ta;
         private readonly ITypeInfo _ti;
+        private readonly IDLData _data;
+
         public OWEnum(ITlibNode parent, ITypeInfo ti, TypeAttr ta)
         {
             Parent = parent;
             _name = ti.GetName();
             _ta = ta;
             _ti = ti;
+            _data = new IDLData(this);
         }
+
         public override string Name => "typedef enum " + _name;
         public override string ShortName => _name;
         public override string ObjectName => _name + "#i";

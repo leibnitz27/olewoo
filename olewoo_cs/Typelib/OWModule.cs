@@ -11,6 +11,8 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly ITypeInfo _ti;
         private readonly TypeAttr _ta;
         private readonly string _dllname;
+        private readonly IDLData _data;
+
         public OWModule(ITlibNode parent, ITypeInfo ti, TypeAttr ta)
         {
             Parent = parent;
@@ -30,6 +32,7 @@ namespace Org.Benf.OleWoo.Typelib
             {
                 _dllname = null;
             }
+            _data = new IDLData(this);
         }
         public override string Name => "module " + _name;
         public override string ShortName => _name;
