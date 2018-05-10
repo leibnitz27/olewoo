@@ -10,7 +10,6 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly TypeAttr _ta;
         private readonly ITypeInfo _ti;
         private readonly bool _topLevel;
-        private readonly IDLData _data;
 
         private OWIDispatchMethods _methodChildren;
         private OWIDispatchProperties _propChildren;
@@ -35,7 +34,10 @@ namespace Org.Benf.OleWoo.Typelib
         {
             var lprops = new List<string> { "uuid(" + _ta.guid + ")" };
             var ta = new TypeAttr(_ti);
-            lprops.Add($"version({ta.wMajorVerNum}.{ta.wMinorVerNum})");
+            if (ta.wMajorVerNum != 0 || ta.wMinorVerNum != 0)
+            {
+                lprops.Add($"version({ta.wMajorVerNum}.{ta.wMinorVerNum})");
+            }
             OWCustData.GetCustData(_ti, ref lprops);
             var help = _ti.GetHelpDocumentationById(-1, out var context);
             AddHelpStringAndContext(lprops, help, context);
@@ -105,15 +107,16 @@ namespace Org.Benf.OleWoo.Typelib
 
         public override void BuildIDLInto(IDLFormatter ih)
         {
+            EnterElement();
             ih.AppendLine("[");
-            var lprops = GetAttributes();
+            var lprops = _data.Attributes;
             for (var i = 0; i < lprops.Count; ++i)
             {
                 ih.AppendLine("  " + lprops[i] + (i < (lprops.Count - 1) ? "," : ""));
             }
             ih.AppendLine("]");
 
-            ih.AppendLine("dispinterface " + _name + " {");
+            ih.AppendLine(_data.Name + " {");
 
             if (_ta.cFuncs > 0 || _ta.cVars > 0)
             {
@@ -125,6 +128,7 @@ namespace Org.Benf.OleWoo.Typelib
                 }
             }
             ih.AppendLine("};");
+            ExitElement();
         }
         public override void EnterElement()
         {

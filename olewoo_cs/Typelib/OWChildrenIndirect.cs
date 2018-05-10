@@ -30,7 +30,9 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public override void BuildIDLInto(IDLFormatter ih)
         {
+            EnterElement();
             Children.ForEach(x => x.BuildIDLInto(ih));
+            ExitElement();
         }
 
         public override List<string> GetAttributes()

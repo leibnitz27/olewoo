@@ -30,9 +30,11 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public override void BuildIDLInto(IDLFormatter ih)
         {
+            EnterElement();
             var props = Children.ToList().ConvertAll(x => x as OWDispProperty);
             ih.AppendLine("properties:");
             if (props.Count > 0) using (new IDLHelperTab(ih)) props.ForEach(x => x.BuildIDLInto(ih, true));
+            ExitElement();
         }
 
         public override List<string> GetAttributes()

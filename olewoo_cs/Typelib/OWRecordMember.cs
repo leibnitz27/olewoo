@@ -8,7 +8,6 @@ namespace Org.Benf.OleWoo.Typelib
     {
         private readonly string _type;
         private readonly string _name;
-        private readonly IDLData _data;
 
         public OWRecordMember(ITlibNode parent, ITypeInfo ti, VarDesc vd)
         {
@@ -37,7 +36,9 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public override void BuildIDLInto(IDLFormatter ih)
         {
-            ih.AppendLine(Name + ";");
+            EnterElement();
+            ih.AppendLine(_data.Name + ";");
+            ExitElement();
         }
 
         public override List<string> GetAttributes()

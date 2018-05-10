@@ -29,12 +29,14 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public override void BuildIDLInto(IDLFormatter ih)
         {
+            EnterElement();
             var meths = Children.Select(x => x as OWMethod).ToList();
             ih.AppendLine("methods:");
             if (meths.Count > 0)
             {
                 using (new IDLHelperTab(ih)) meths.ForEach(x => x.BuildIDLInto(ih, true));
             }
+            ExitElement();
         }
 
         public override List<string> GetAttributes()

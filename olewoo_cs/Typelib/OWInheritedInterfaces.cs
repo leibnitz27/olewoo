@@ -43,7 +43,9 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public override void BuildIDLInto(IDLFormatter ih)
         {
+            EnterElement();
             ih.AppendLine("");
+            ExitElement();
         }
 
         public override List<string> GetAttributes()

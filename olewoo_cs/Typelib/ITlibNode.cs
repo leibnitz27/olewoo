@@ -10,6 +10,13 @@ namespace Org.Benf.OleWoo.Typelib
         public delegate List<ITlibNode> dlgCreateChildren();
 
         public IList<ITypeLibListener> Listeners { get; set; }
+        protected IDLData _data;
+        public IDLData Data => _data;
+
+        public ITlibNode()
+        {
+            Listeners = new List<ITypeLibListener>();    
+        }
 
         public enum ImageIndices
         {

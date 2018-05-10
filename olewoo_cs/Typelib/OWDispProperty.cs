@@ -9,7 +9,6 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly string _name;
         private readonly VarDesc _vd;
         private readonly ITypeInfo _ti;
-        private readonly IDLData _data;
 
         public OWDispProperty(ITlibNode parent, ITypeInfo ti, VarDesc vd)
         {
@@ -44,7 +43,8 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public void BuildIDLInto(IDLFormatter ih, bool embedded)
         {
-            var lprops = GetAttributes();
+            EnterElement();
+            var lprops = _data.Attributes;
             ih.AppendLine("[" + string.Join(", ", lprops.ToArray()) + "] ");
             // Prototype in a different line.
             var ed = _vd.elemDescVar;
@@ -54,7 +54,8 @@ namespace Org.Benf.OleWoo.Typelib
 //            {
 //                ih.AddString(" " + _fd.callconv.ToString().Substring(2).ToLower());
 //            }
-            ih.AppendLine(" " + _name + ";");
+            ih.AppendLine(" " + _data.Name + ";");
+            ExitElement();
         }
         public override void BuildIDLInto(IDLFormatter ih)
         {

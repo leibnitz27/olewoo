@@ -10,7 +10,6 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly string _name;
         private readonly FuncDesc _fd;
         private readonly ITypeInfo _ti;
-        private readonly IDLData _data;
 
         public OWMethod(ITlibNode parent, ITypeInfo ti, FuncDesc fd)
         {
@@ -48,7 +47,10 @@ namespace Org.Benf.OleWoo.Typelib
                     lprops.Add("propputref");
                     break;
             }
-            OWCustData.GetAllFuncCustData(_fd.memid - 1, _ti, ref lprops);
+            if (!MemIdInSpecialRange)
+            {
+                OWCustData.GetAllFuncCustData(_fd.memid, (INVOKEKIND) _fd.invkind, _ti, ref lprops);
+            }
             var help = _ti.GetHelpDocumentationById(_fd.memid, out var context);
             if (0 != (_fd.wFuncFlags & FuncDesc.FuncFlags.FUNCFLAG_FRESTRICTED)) lprops.Add("restricted");
             if (0 != (_fd.wFuncFlags & FuncDesc.FuncFlags.FUNCFLAG_FHIDDEN)) lprops.Add("hidden");
@@ -87,7 +89,8 @@ namespace Org.Benf.OleWoo.Typelib
 
         public void BuildIDLInto(IDLFormatter ih, bool bAsDispatch)
         {
-            var lprops = GetAttributes();
+            EnterElement();
+            var lprops = _data.Attributes;
             ih.AppendLine("[" + string.Join(", ", lprops.ToArray()) + "] ");
             // Prototype in a different line.
             var ed = _fd.elemdescFunc;
@@ -107,7 +110,7 @@ namespace Org.Benf.OleWoo.Typelib
 
                 paramtextgen = x =>
                 {
-                    var paramname = (names[x + 1] == null) ? "rhs" : names[x + 1];
+                    var paramname = names[x + 1] ?? "rhs";
                     var edp = edps[x];
                     ih.AddString(ParamFlagsDescription(edp.paramdesc) + " ");
                     edp.tdesc.ComTypeNameAsString(_ti, ih);
@@ -119,7 +122,7 @@ namespace Org.Benf.OleWoo.Typelib
             {
                 ih.AddString(" " + _fd.callconv.ToString().Substring(2).ToLower());
             }
-            ih.AddString($" {_name}");
+            ih.AddString($" {_data.Name}");
             switch (_fd.cParams)
             {
                 case 0:
@@ -143,6 +146,7 @@ namespace Org.Benf.OleWoo.Typelib
                     ih.AppendLine(");");
                     break;
             }
+            ExitElement();
         }
         public override void EnterElement()
         {

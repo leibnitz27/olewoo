@@ -11,7 +11,6 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly ITypeInfo _ti;
         private readonly TypeAttr _ta;
         private readonly string _dllname;
-        private readonly IDLData _data;
 
         public OWModule(ITlibNode parent, ITypeInfo ti, TypeAttr ta)
         {
@@ -74,6 +73,7 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public override void BuildIDLInto(IDLFormatter ih)
         {
+            EnterElement();
             if (_ta.cFuncs == 0)
             {
                 ih.AppendLine("// NOTE: This module has no entry points. There is no way to");
@@ -81,16 +81,17 @@ namespace Org.Benf.OleWoo.Typelib
                 ih.AppendLine("// ");
             }
             ih.AppendLine("[");
-            var liba = GetAttributes();
+            var liba = _data.Attributes;
             var cnt = 0;
             liba.ForEach(x => ih.AppendLine("  " + x + (++cnt == liba.Count ? "" : ",")));
             ih.AppendLine("]");
-            ih.AppendLine("module " + _name + " {");
+            ih.AppendLine(_data.Name + " {");
             using (new IDLHelperTab(ih))
             {
                 Children.ForEach(x => x.BuildIDLInto(ih));
             }
             ih.AppendLine("};");
+            ExitElement();
         }
 
         public override List<string> GetAttributes()

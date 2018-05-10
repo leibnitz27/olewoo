@@ -15,7 +15,6 @@ namespace Org.Benf.OleWoo.Typelib
     {
         private ITypeLib _tlib;
         private readonly string _name;
-        private readonly IDLData _data;
 
         public OWTypeLib(string path)
         {
@@ -87,14 +86,16 @@ namespace Org.Benf.OleWoo.Typelib
             // interfaces.
             // dispinterfaces aren't shown seperately.
 
+            EnterElement();
+
             ih.AppendLine("// Generated .IDL file (by OleWoo)");
             ih.AppendLine("[");
-            
-            var liba = GetAttributes();
+
+            var liba = _data.Attributes;
             var cnt = 0;
             liba.ForEach( x => ih.AppendLine("  " + x + (++cnt == liba.Count ? "" : ",")) );
             ih.AppendLine("]");
-            ih.AppendLine("library " + ShortName);
+            ih.AppendLine("library " + _data.ShortName);
             ih.AppendLine("{");
             using (new IDLHelperTab(ih))
             {
@@ -137,6 +138,8 @@ namespace Org.Benf.OleWoo.Typelib
                 );
             }
             ih.AppendLine("};");
+
+            ExitElement();
         }
 
         public override void EnterElement()

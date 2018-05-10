@@ -10,7 +10,6 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly string _name;
         private readonly TypeAttr _ta;
         private readonly ITypeInfo _ti;
-        private readonly IDLData _data;
 
         public OWEnum(ITlibNode parent, ITypeInfo ti, TypeAttr ta)
         {
@@ -21,7 +20,7 @@ namespace Org.Benf.OleWoo.Typelib
             _data = new IDLData(this);
         }
 
-        public override string Name => "typedef enum " + _name;
+        public override string Name => "enum " + _name;
         public override string ShortName => _name;
         public override string ObjectName => _name + "#i";
 
@@ -44,12 +43,13 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public override void BuildIDLInto(IDLFormatter ih)
         {
+            EnterElement();
             var tde = "typedef ";
             // If the enum has a uuid, or a version associate with it, we provide that information on the same line.
 
             if (!_ta.guid.Equals(Guid.Empty))
             {
-                var lprops = GetAttributes();
+                var lprops = _data.Attributes;
                 tde += "[" + string.Join(",", lprops) + "]";
                 ih.AppendLine(tde);
                 tde = "";
@@ -60,14 +60,17 @@ namespace Org.Benf.OleWoo.Typelib
                 var idx = 0;
                 Children.ForEach(x => ((OWEnumValue) x).BuildIDLInto(ih, true, ++idx == _ta.cVars));
             }
-            ih.AppendLine("} " + _name + ";");
+            ih.AppendLine("} " + _data.ShortName + ";");
+            ExitElement();
         }
 
         public override List<string> GetAttributes()
         {
-            var lprops = new List<string>();
-            lprops.Add("uuid(" + _ta.guid + ")");
-            lprops.Add("version(" + _ta.wMajorVerNum + "." + _ta.wMinorVerNum + ")");
+            var lprops = new List<string>
+            {
+                "uuid(" + _ta.guid + ")",
+                "version(" + _ta.wMajorVerNum + "." + _ta.wMinorVerNum + ")"
+            };
             return lprops;
         }
         public override void EnterElement()

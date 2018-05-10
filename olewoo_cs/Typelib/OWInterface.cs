@@ -10,7 +10,6 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly TypeAttr _ta;
         private readonly ITypeInfo _ti;
         private readonly bool _topLevel;
-        private readonly IDLData _data;
 
         public OWInterface(ITlibNode parent, ITypeInfo ti, TypeAttr ta, bool topLevel)
         {
@@ -34,7 +33,10 @@ namespace Org.Benf.OleWoo.Typelib
         {
             var lprops = new List<string> { $"uuid({_ta.guid})" };
             var ta = new TypeAttr(_ti);
-            lprops.Add($"version({ta.wMajorVerNum}.{ta.wMinorVerNum})");
+            if (ta.wMajorVerNum != 0 || ta.wMinorVerNum != 0)
+            {
+                lprops.Add($"version({ta.wMajorVerNum}.{ta.wMinorVerNum})");
+            }
             OWCustData.GetCustData(_ti, ref lprops);
             var help = _ti.GetHelpDocumentationById(-1, out var context);
             AddHelpStringAndContext(lprops, help, context);
@@ -71,8 +73,9 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public override void BuildIDLInto(IDLFormatter ih)
         {
+            EnterElement();
             ih.AppendLine("[");
-            var lprops = GetAttributes();
+            var lprops = _data.Attributes;
             for (var i = 0; i < lprops.Count; ++i)
             {
                 ih.AppendLine("  " + lprops[i] + (i < (lprops.Count - 1) ? "," : ""));
@@ -83,19 +86,20 @@ namespace Org.Benf.OleWoo.Typelib
             {
                 _ti.GetRefTypeOfImplType(0, out var href);
                 _ti.GetRefTypeInfo(href, out var ti2);
-                ih.AddString($"interface {_name} : ");
+                ih.AddString($"{_data.Name} : ");
                 ih.AddLink(ti2.GetName(), "i");
                 ih.AppendLine(" {");
             }
             else
             {
-                ih.AppendLine("interface " + _name + " {");
+                ih.AppendLine("interface " + _data.Name + " {");
             }
             using (new IDLHelperTab(ih))
             {
                 Children.ForEach( x => x.BuildIDLInto(ih) );
             }
             ih.AppendLine("};");
+            ExitElement();
         }
         public override void EnterElement()
         {

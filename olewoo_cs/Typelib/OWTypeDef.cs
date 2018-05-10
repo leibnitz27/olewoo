@@ -9,7 +9,6 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly ITypeInfo _ti;
         private readonly TypeAttr _ta;
         private readonly string _name;
-        private readonly IDLData _data;
 
         public OWTypeDef(ITlibNode parent, ITypeInfo ti, TypeAttr ta)
         {
@@ -41,8 +40,10 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public override void BuildIDLInto(IDLFormatter ih)
         {
-            var lprops = GetAttributes();
-            ih.AppendLine("typedef [" + string.Join(", ", lprops.ToArray()) + "] " + _name + ";");
+            EnterElement();
+            var lprops = _data.Attributes;
+            ih.AppendLine("typedef [" + string.Join(", ", lprops.ToArray()) + "] " + _data.ShortName + ";");
+            ExitElement();
         }
 
         public override List<string> GetAttributes()
