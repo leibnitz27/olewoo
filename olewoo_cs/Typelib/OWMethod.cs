@@ -77,7 +77,8 @@ namespace Org.Benf.OleWoo.Typelib
             if (0 != (flg & ParamDesc.ParamFlags.PARAMFLG_FOUT)) res.Add("out");
             if (0 != (flg & ParamDesc.ParamFlags.PARAMFLG_FRETVAL)) res.Add("retval");
             if (0 != (flg & ParamDesc.ParamFlags.PARAMFLG_FOPT)) res.Add("optional");
-            if (0 != (flg & ParamDesc.ParamFlags.PARAMFLG_FHASDEFAULT)) res.Add("defaultvalue(" + ITypeInfoXtra.QuoteString(pd.varDefaultValue) + ")");
+            if (0 != (flg & ParamDesc.ParamFlags.PARAMFLG_FLCID)) res.Add("lcid");
+            if (0 != (flg & ParamDesc.ParamFlags.PARAMFLG_FHASDEFAULT) && pd.varDefaultValue != null) res.Add("defaultvalue(" + ITypeInfoXtra.QuoteString(pd.varDefaultValue) + ")");
             return "[" + string.Join(", ", res.ToArray()) + "]";
         }
         public bool Property => _fd.invkind != FuncDesc.InvokeKind.INVOKE_FUNC;

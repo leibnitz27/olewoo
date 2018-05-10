@@ -21,7 +21,7 @@ namespace Org.Benf.OleWoo.Typelib
             _data = new IDLData(this);
         }
 
-        public override string Name => "const int " + _name + " = " + negStr(_val);
+        public override string Name => _name + " = " + negStr(_val);
         public override string ShortName => _name;
         public override string ObjectName => null;
 

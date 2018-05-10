@@ -130,9 +130,22 @@ namespace Org.Benf.OleWoo.Typelib
                         if ((y as OWInterface) != null) x.Add(y.ShortName);
                         return x;
                     });
-                Children.FindAll(x => ((x as OWInterface) != null || (x as OWDispInterface) != null)).ForEach(
+                Children.FindAll(x => ((x as OWInterface) != null || (x as OWDispInterface) != null) || (x as OWCoClass !=null)).ForEach(
                     x => ih.AppendLine(string.Concat(x.Name, ";"))
                         );
+                ih.AppendLine(string.Empty);
+                Children.FindAll(x => (x as OWEnum) != null).ForEach(
+                    x =>
+                    {
+                        x.BuildIDLInto(ih);
+                        ih.AppendLine(string.Empty);
+                    });
+                ih.AppendLine(string.Empty);
+                Children.FindAll(x => (x as OWRecord) != null).ForEach(x =>
+                {
+                    x.BuildIDLInto(ih);
+                    ih.AppendLine(string.Empty);
+                });
                 Children.FindAll(x => x.DisplayAtTLBLevel(interfaceNames)).ForEach(
                    x => { x.BuildIDLInto(ih); ih.AppendLine(""); }
                 );
