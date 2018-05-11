@@ -102,7 +102,7 @@ namespace olewoo_interop {
 			cli::array<CustomData ^, 1> ^ get()
 			{
 				cli::array<CustomData ^, 1> ^ res = gcnew cli::array<CustomData ^, 1>(_custdata->cCustData);
-				for (size_t x=0;x<_custdata->cCustData;++x)
+				for (size_t x = 0; x<_custdata->cCustData; ++x)
 				{
 					CUSTDATAITEM & cdi = _custdata->prgCustData[x];
 					CustomData ^ cd = gcnew CustomData(cdi.guid, cdi.varValue);
@@ -119,11 +119,11 @@ namespace olewoo_interop {
 		TLIBATTR * _plibAttr;
 	public:
 		enum class LibFlags
-		{	
-			LIBFLAG_FRESTRICTED	= 0x1,
-			LIBFLAG_FCONTROL	= 0x2,
-			LIBFLAG_FHIDDEN	= 0x4,
-			LIBFLAG_FHASDISKIMAGE	= 0x8
+		{
+			LIBFLAG_FRESTRICTED = 0x1,
+			LIBFLAG_FCONTROL = 0x2,
+			LIBFLAG_FHIDDEN = 0x4,
+			LIBFLAG_FHASDISKIMAGE = 0x8
 		};
 
 		TypeLibAttr(System::Runtime::InteropServices::ComTypes::ITypeLib ^ tl)
@@ -186,6 +186,41 @@ namespace olewoo_interop {
 		}
 	};
 
+	ref class TypeDesc;
+
+	public ref class ArrayDesc
+	{
+		ARRAYDESC * m_pad;
+	public:
+		ArrayDesc(ARRAYDESC & ad)
+		{
+			m_pad = &ad;
+		}
+		property TypeDesc ^ tdescElem
+		{
+			TypeDesc ^ get()
+			{
+				return getTypeDesc();
+			}
+		}
+		property USHORT cDims
+		{
+			USHORT get()
+			{
+				return m_pad->cDims;
+			}
+		}
+		property SAFEARRAYBOUND rgBounds
+		{
+			SAFEARRAYBOUND get()
+			{
+				return m_pad->rgbounds[1];
+			}
+		}
+	private:
+		TypeDesc ^ getTypeDesc();
+	};
+
 	public ref class TypeDesc
 	{
 		TYPEDESC * m_ptd;
@@ -208,6 +243,27 @@ namespace olewoo_interop {
 				return m_ptd->hreftype;
 			}
 		}
+		property ArrayDesc^ lpadesc
+		{
+			ArrayDesc^ get()
+			{
+				return gcnew ArrayDesc(*m_ptd->lpadesc);
+			}
+		}
+		property TypeDesc^ lptdsec
+		{
+			TypeDesc^ get()
+			{
+				return gcnew TypeDesc(*m_ptd->lptdesc);
+			}
+		}
+		property VARTYPE vt
+		{
+			VARTYPE get()
+			{
+				return m_ptd->vt;
+			}
+		}
 	};
 
 	public ref class ParamDesc
@@ -218,12 +274,12 @@ namespace olewoo_interop {
 		{
 			PARAMFLG_NONE = 0,
 			PARAMFLG_FIN = 0x1,
-			PARAMFLG_FOUT	= 0x2 ,
-			PARAMFLG_FLCID	= 0x4 ,
-			PARAMFLG_FRETVAL	= 0x8 ,
-			PARAMFLG_FOPT	= 0x10 ,
-			PARAMFLG_FHASDEFAULT	= 0x20 ,
-			PARAMFLG_FHASCUSTDATA	= 0x40
+			PARAMFLG_FOUT = 0x2,
+			PARAMFLG_FLCID = 0x4,
+			PARAMFLG_FRETVAL = 0x8,
+			PARAMFLG_FOPT = 0x10,
+			PARAMFLG_FHASDEFAULT = 0x20,
+			PARAMFLG_FHASCUSTDATA = 0x40
 		};
 		ParamDesc(PARAMDESC & pd)
 		{
@@ -334,41 +390,44 @@ namespace olewoo_interop {
 		IntPtr m_fdptr;
 		FUNCDESC * m_funcdesc;
 	public:
-		 /* [v1_enum] */ 
+		/* [v1_enum] */
 		enum class InvokeKind
-		{	INVOKE_FUNC	= 1,
-			INVOKE_PROPERTYGET	= 2,
-			INVOKE_PROPERTYPUT	= 4,
-			INVOKE_PROPERTYPUTREF	= 8
+		{
+			INVOKE_FUNC = 1,
+			INVOKE_PROPERTYGET = 2,
+			INVOKE_PROPERTYPUT = 4,
+			INVOKE_PROPERTYPUTREF = 8
 		};
 
 		enum class FuncFlags
-			{	FUNCFLAG_FRESTRICTED	= 0x1,
-			FUNCFLAG_FSOURCE	= 0x2,
-			FUNCFLAG_FBINDABLE	= 0x4,
-			FUNCFLAG_FREQUESTEDIT	= 0x8,
-			FUNCFLAG_FDISPLAYBIND	= 0x10,
-			FUNCFLAG_FDEFAULTBIND	= 0x20,
-			FUNCFLAG_FHIDDEN	= 0x40,
-			FUNCFLAG_FUSESGETLASTERROR	= 0x80,
-			FUNCFLAG_FDEFAULTCOLLELEM	= 0x100,
-			FUNCFLAG_FUIDEFAULT	= 0x200,
-			FUNCFLAG_FNONBROWSABLE	= 0x400,
-			FUNCFLAG_FREPLACEABLE	= 0x800,
-			FUNCFLAG_FIMMEDIATEBIND	= 0x1000
-			};
+		{
+			FUNCFLAG_FRESTRICTED = 0x1,
+			FUNCFLAG_FSOURCE = 0x2,
+			FUNCFLAG_FBINDABLE = 0x4,
+			FUNCFLAG_FREQUESTEDIT = 0x8,
+			FUNCFLAG_FDISPLAYBIND = 0x10,
+			FUNCFLAG_FDEFAULTBIND = 0x20,
+			FUNCFLAG_FHIDDEN = 0x40,
+			FUNCFLAG_FUSESGETLASTERROR = 0x80,
+			FUNCFLAG_FDEFAULTCOLLELEM = 0x100,
+			FUNCFLAG_FUIDEFAULT = 0x200,
+			FUNCFLAG_FNONBROWSABLE = 0x400,
+			FUNCFLAG_FREPLACEABLE = 0x800,
+			FUNCFLAG_FIMMEDIATEBIND = 0x1000
+		};
 		enum class CallConv
-			{	CC_FASTCALL	= 0,
-			CC_CDECL	= 1,
-			CC_MSCPASCAL	= ( CC_CDECL + 1 ) ,
-			CC_PASCAL	= CC_MSCPASCAL,
-			CC_MACPASCAL	= ( CC_PASCAL + 1 ) ,
-			CC_STDCALL	= ( CC_MACPASCAL + 1 ) ,
-			CC_FPFASTCALL	= ( CC_STDCALL + 1 ) ,
-			CC_SYSCALL	= ( CC_FPFASTCALL + 1 ) ,
-			CC_MPWCDECL	= ( CC_SYSCALL + 1 ) ,
-			CC_MPWPASCAL	= ( CC_MPWCDECL + 1 ) ,
-			CC_MAX	= ( CC_MPWPASCAL + 1 ) 
+		{
+			CC_FASTCALL = 0,
+			CC_CDECL = 1,
+			CC_MSCPASCAL = (CC_CDECL + 1),
+			CC_PASCAL = CC_MSCPASCAL,
+			CC_MACPASCAL = (CC_PASCAL + 1),
+			CC_STDCALL = (CC_MACPASCAL + 1),
+			CC_FPFASTCALL = (CC_STDCALL + 1),
+			CC_SYSCALL = (CC_FPFASTCALL + 1),
+			CC_MPWCDECL = (CC_SYSCALL + 1),
+			CC_MPWPASCAL = (CC_MPWCDECL + 1),
+			CC_MAX = (CC_MPWPASCAL + 1)
 		};
 
 		FuncDesc(System::Runtime::InteropServices::ComTypes::ITypeInfo ^ i, int idx)
@@ -430,7 +489,7 @@ namespace olewoo_interop {
 			cli::array<ElemDesc ^, 1> ^ get()
 			{
 				cli::array<ElemDesc ^, 1> ^ res = gcnew cli::array<ElemDesc ^, 1>(m_funcdesc->cParams);
-				for (int x=0;x<m_funcdesc->cParams;++x)
+				for (int x = 0; x<m_funcdesc->cParams; ++x)
 				{
 					res[x] = gcnew ElemDesc(m_funcdesc->lprgelemdescParam[x]);
 				}
@@ -448,34 +507,35 @@ namespace olewoo_interop {
 	public:
 		enum class TypeKind // tagTYPEKIND
 		{
-			TKIND_ENUM	= 0,
-			TKIND_RECORD	= TKIND_ENUM + 1,
-			TKIND_MODULE	= TKIND_RECORD + 1,
-			TKIND_INTERFACE	= TKIND_MODULE + 1,
-			TKIND_DISPATCH	= TKIND_INTERFACE + 1,
-			TKIND_COCLASS	= TKIND_DISPATCH + 1,
-			TKIND_ALIAS	= TKIND_COCLASS + 1,
-			TKIND_UNION	= TKIND_ALIAS + 1,
-			TKIND_MAX	= TKIND_UNION + 1	
+			TKIND_ENUM = 0,
+			TKIND_RECORD = TKIND_ENUM + 1,
+			TKIND_MODULE = TKIND_RECORD + 1,
+			TKIND_INTERFACE = TKIND_MODULE + 1,
+			TKIND_DISPATCH = TKIND_INTERFACE + 1,
+			TKIND_COCLASS = TKIND_DISPATCH + 1,
+			TKIND_ALIAS = TKIND_COCLASS + 1,
+			TKIND_UNION = TKIND_ALIAS + 1,
+			TKIND_MAX = TKIND_UNION + 1
 		};
 
 		enum class TypeFlags
-			{	TYPEFLAG_FAPPOBJECT	= 0x1,
-			TYPEFLAG_FCANCREATE	= 0x2,
-			TYPEFLAG_FLICENSED	= 0x4,
-			TYPEFLAG_FPREDECLID	= 0x8,
-			TYPEFLAG_FHIDDEN	= 0x10,
-			TYPEFLAG_FCONTROL	= 0x20,
-			TYPEFLAG_FDUAL	= 0x40,
-			TYPEFLAG_FNONEXTENSIBLE	= 0x80,
-			TYPEFLAG_FOLEAUTOMATION	= 0x100,
-			TYPEFLAG_FRESTRICTED	= 0x200,
-			TYPEFLAG_FAGGREGATABLE	= 0x400,
-			TYPEFLAG_FREPLACEABLE	= 0x800,
-			TYPEFLAG_FDISPATCHABLE	= 0x1000,
-			TYPEFLAG_FREVERSEBIND	= 0x2000,
-			TYPEFLAG_FPROXY	= 0x4000
-			};
+		{
+			TYPEFLAG_FAPPOBJECT = 0x1,
+			TYPEFLAG_FCANCREATE = 0x2,
+			TYPEFLAG_FLICENSED = 0x4,
+			TYPEFLAG_FPREDECLID = 0x8,
+			TYPEFLAG_FHIDDEN = 0x10,
+			TYPEFLAG_FCONTROL = 0x20,
+			TYPEFLAG_FDUAL = 0x40,
+			TYPEFLAG_FNONEXTENSIBLE = 0x80,
+			TYPEFLAG_FOLEAUTOMATION = 0x100,
+			TYPEFLAG_FRESTRICTED = 0x200,
+			TYPEFLAG_FAGGREGATABLE = 0x400,
+			TYPEFLAG_FREPLACEABLE = 0x800,
+			TYPEFLAG_FDISPATCHABLE = 0x1000,
+			TYPEFLAG_FREVERSEBIND = 0x2000,
+			TYPEFLAG_FPROXY = 0x4000
+		};
 
 		TypeAttr(System::Runtime::InteropServices::ComTypes::ITypeInfo ^ i)
 		{
@@ -566,7 +626,7 @@ namespace olewoo_interop {
 			System::Runtime::InteropServices::Marshal::GetNativeVariantForObject(ti, System::IntPtr(&tmp));
 			CComQIPtr<ITypeInfo> titmp = tmp.punkVal;
 			CComBSTR dllentry;
-			if (SUCCEEDED(titmp->GetDllEntry(memid,(INVOKEKIND) invkind, &dllentry, 0, 0)) && (dllentry != 0))
+			if (SUCCEEDED(titmp->GetDllEntry(memid, (INVOKEKIND)invkind, &dllentry, 0, 0)) && (dllentry != 0))
 			{
 				return gcnew System::String(OLE2A(dllentry));
 			}

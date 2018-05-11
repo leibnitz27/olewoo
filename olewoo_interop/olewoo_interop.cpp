@@ -42,3 +42,7 @@ void TypeAttr::ReplaceTypeInfo(System::Runtime::InteropServices::ComTypes::IType
 }
 */
 
+TypeDesc ^ ArrayDesc::getTypeDesc()
+{
+	return gcnew TypeDesc(m_pad->tdescElem);
+}

@@ -48,7 +48,7 @@ namespace Org.Benf.OleWoo.GuiElem
             var ofd = new OpenFileDialog
             {
                 Filter =
-                    "Dll files (*.dll)|*.dll|Typelibraries (*.tlb)|*.tlb|Executables (*.exe)|*.exe|ActiveX controls (*.ocx)|*.ocx|All files (*.*)|*.*",
+                    "Dll files (*.dll)|*.dll|Type libraries (*.tlb)|*.tlb|Executables (*.exe)|*.exe|ActiveX controls (*.ocx)|*.ocx|Object Libraries (*.olb)|*.olb|All files (*.*)|*.*",
                 CheckFileExists = true
             };
             switch (ofd.ShowDialog(this))

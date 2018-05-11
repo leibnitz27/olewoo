@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using olewoo_interop;
 
@@ -7,6 +9,7 @@ namespace Org.Benf.OleWoo.Typelib
     internal class OWTypeDef : ITlibNode
     {
         private readonly ITypeInfo _ti;
+        private ITypeInfo _oti;
         private readonly TypeAttr _ta;
         private readonly string _name;
 
@@ -16,8 +19,25 @@ namespace Org.Benf.OleWoo.Typelib
             _ta = ta;
             _ti = ti;
 
-            _ti.GetRefTypeInfo(_ta.tdescAlias.hreftype, out var oti);
-            _name = oti.GetName() + " " + ti.GetName();
+            string prefix = string.Empty;
+            if(VarEnum.VT_PTR == ((VarEnum)_ta.tdescAlias.vt & VarEnum.VT_PTR))
+            {
+                var otd = _ta.tdescAlias.lptdsec;
+                _ti.GetRefTypeInfo(otd.hreftype, out _oti);
+                prefix = _oti.GetName() + " ";
+            }
+            else if (VarEnum.VT_ARRAY == ((VarEnum) _ta.tdescAlias.vt & VarEnum.VT_ARRAY))
+            {
+                var oad = ta.tdescAlias.lpadesc;
+                _ti.GetRefTypeInfo(oad.tdescElem.hreftype, out _oti);
+                prefix = _oti.GetName() + " ";
+            }
+            else
+            {
+                _ti.GetRefTypeInfo(_ta.tdescAlias.hreftype, out _oti);
+                prefix = _oti.GetName() + " ";
+            }
+            _name = prefix + ti.GetName();
             _data = new IDLData(this);
         }
         public override string Name => "typedef " + _name;
@@ -34,8 +54,10 @@ namespace Org.Benf.OleWoo.Typelib
         public override List<ITlibNode> GenChildren()
         {
             var res = new List<ITlibNode>();
-            _ti.GetRefTypeInfo(_ta.tdescAlias.hreftype, out var oti);
-            CommonBuildTlibNode(this, oti, false, false, res);
+            if (_oti != null)
+            {
+                CommonBuildTlibNode(this, _oti, false, false, res);
+            }
             return res;
         }
         public override void BuildIDLInto(IDLFormatter ih)

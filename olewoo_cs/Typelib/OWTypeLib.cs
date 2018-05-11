@@ -93,7 +93,7 @@ namespace Org.Benf.OleWoo.Typelib
 
             var liba = _data.Attributes;
             var cnt = 0;
-            liba.ForEach( x => ih.AppendLine("  " + x + (++cnt == liba.Count ? "" : ",")) );
+            liba.ForEach(x => ih.AppendLine("  " + x + (++cnt == liba.Count ? "" : ",")));
             ih.AppendLine("]");
             ih.AppendLine("library " + _data.ShortName);
             ih.AppendLine("{");
@@ -130,9 +130,10 @@ namespace Org.Benf.OleWoo.Typelib
                         if ((y as OWInterface) != null) x.Add(y.ShortName);
                         return x;
                     });
-                Children.FindAll(x => ((x as OWInterface) != null || (x as OWDispInterface) != null) || (x as OWCoClass !=null)).ForEach(
+                Children.FindAll(x =>
+                    ((x as OWInterface) != null || (x as OWDispInterface) != null) || (x as OWCoClass != null)).ForEach(
                     x => ih.AppendLine(string.Concat(x.Name, ";"))
-                        );
+                );
                 ih.AppendLine(string.Empty);
                 Children.FindAll(x => (x as OWEnum) != null).ForEach(
                     x =>
@@ -147,7 +148,11 @@ namespace Org.Benf.OleWoo.Typelib
                     ih.AppendLine(string.Empty);
                 });
                 Children.FindAll(x => x.DisplayAtTLBLevel(interfaceNames)).ForEach(
-                   x => { x.BuildIDLInto(ih); ih.AppendLine(""); }
+                    x =>
+                    {
+                        x.BuildIDLInto(ih);
+                        ih.AppendLine("");
+                    }
                 );
             }
             ih.AppendLine("};");
