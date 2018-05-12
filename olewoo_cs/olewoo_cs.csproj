@@ -6,13 +6,14 @@
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{01A3B377-BFDB-4679-943E-C897304D7785}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Org.Benf.OleWoo</RootNamespace>
     <AssemblyName>olewoo</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ApplicationIcon>olewoo.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -72,6 +73,9 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -90,30 +94,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GuiElem\AboutBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GuiElem\AboutBox.Designer.cs">
-      <DependentUpon>AboutBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FileShellExtension.cs" />
-    <Compile Include="GuiElem\FindDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GuiElem\FindDialog.Designer.cs">
-      <DependentUpon>FindDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GuiMisc\UpdateSuspender.cs" />
-    <Compile Include="GuiMisc\TbUpdateSuspender.cs" />
     <Compile Include="IDLHelper.cs" />
     <Compile Include="Listeners\TypeLibListener.cs" />
-    <Compile Include="MRUList.cs" />
-    <Compile Include="GuiElem\OleWoo.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GuiElem\OleWoo.Designer.cs">
-      <DependentUpon>OleWoo.cs</DependentUpon>
-    </Compile>
     <Compile Include="Typelib\IClearUp.cs" />
     <Compile Include="Typelib\IDLData.cs" />
     <Compile Include="Typelib\IDLGrabber.cs" />
@@ -138,51 +120,10 @@
     <Compile Include="Typelib\OWRecordMember.cs" />
     <Compile Include="Typelib\OWTypeDef.cs" />
     <Compile Include="Typelib\OWTypeLib.cs" />
-    <Compile Include="GuiElem\PnlOleText.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GuiElem\PnlOleText.Designer.cs">
-      <DependentUpon>PnlOleText.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GuiElem\PnlTextOrTabbed.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GuiElem\PnlTextOrTabbed.Designer.cs">
-      <DependentUpon>PnlTextOrTabbed.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="GuiElem\AboutBox.resx">
-      <DependentUpon>AboutBox.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GuiElem\FindDialog.resx">
-      <DependentUpon>FindDialog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GuiElem\OleWoo.resx">
-      <DependentUpon>OleWoo.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GuiElem\PnlOleText.resx">
-      <DependentUpon>PnlOleText.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GuiElem\PnlTextOrTabbed.resx">
-      <DependentUpon>PnlTextOrTabbed.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GuiElem\TabControlCB.resx">
-      <DependentUpon>TabControlCB.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="wooctrl.resx">
-      <DependentUpon>wooctrl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
@@ -200,25 +141,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="GuiElem\RichTextBoxEx.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="GuiElem\TabControlCB.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="GuiElem\TabControlCB.Designer.cs">
-      <DependentUpon>TabControlCB.cs</DependentUpon>
-    </Compile>
     <Compile Include="Win32.cs" />
-    <Compile Include="wooctrl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="wooctrl.Designer.cs">
-      <DependentUpon>wooctrl.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="olewoo.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
