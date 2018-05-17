@@ -118,7 +118,6 @@ namespace Org.Benf.OleWoo.Typelib
         {
             if (!string.IsNullOrEmpty(help)) lprops.Add("helpstring(\"" + help + "\")");
             if (context != 0) lprops.Add("helpcontext(" + context.PaddedHex() + ")");
-
         }
 
         public abstract List<string> GetAttributes();

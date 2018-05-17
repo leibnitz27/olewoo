@@ -26,6 +26,15 @@ namespace Org.Benf.OleWoo.Typelib
             _data = new IDLData(this);
         }
 
+        public OWTypeLib(ITypeLib tlib)
+        {
+            _tlib = tlib;
+            _name = _tlib.GetName();
+            _name += " (" + _tlib.GetHelpDocumentation(out _) + ")";
+
+            _data = new IDLData(this);
+        }
+
         public override List<string> GetAttributes()
         {
             var liba = new List<string>();
@@ -118,22 +127,44 @@ namespace Org.Benf.OleWoo.Typelib
                 }
                 ih.AppendLine(string.Empty);
 
-                // Forward declare all interfaces.
-                ih.AppendLine("// Forward declare all types defined in this typelib");
-                /* 
-                 * Need to collect all dumpable interface names, in case we have dispinterfaces which don't have
-                 * top level interfaces.  In THIS case, we'd dump the dispinterface.
-                 */
+                //Identify all interfaces & dispinterfaces to be listed
                 var interfaceNames = Children.Aggregate<ITlibNode, ICollection<string>>(new HashSet<string>(),
                     (x, y) =>
                     {
                         if ((y as OWInterface) != null) x.Add(y.ShortName);
                         return x;
                     });
-                Children.FindAll(x =>
-                    ((x as OWInterface) != null || (x as OWDispInterface) != null) || (x as OWCoClass != null)).ForEach(
+
+                // Forward declare all interfaces.
+                ih.AppendLine("// Forward declare all types defined in this typelib");
+                
+                Children.FindAll(x => (x as OWCoClass) != null).ForEach(
                     x => ih.AppendLine(string.Concat(x.Name, ";"))
                 );
+
+                /* 
+                 * Need to collect all dumpable interface names, in case we have dispinterfaces which don't have
+                 * top level interfaces.  In THIS case, we'd dump the dispinterface.
+                 */
+                var fwdDeclarations = new Dictionary<string, string>();
+                Children.FindAll(x =>
+                    (x as OWInterface) != null).ForEach(
+                    x => fwdDeclarations.Add(x.ShortName, string.Concat(x.Name, ";"))
+                );
+                Children.FindAll(x =>
+                    (x as OWDispInterface) != null).ForEach(
+                    x =>
+                    {
+                        if (!fwdDeclarations.ContainsKey(x.ShortName))
+                        {
+                            fwdDeclarations.Add(x.ShortName, string.Concat(x.Name, ";"));
+                        }
+                    }
+                );
+                foreach (var fwdDeclaration in fwdDeclarations)
+                {
+                    ih.AppendLine(fwdDeclaration.Value);
+                }
                 ih.AppendLine(string.Empty);
                 Children.FindAll(x => (x as OWEnum) != null).ForEach(
                     x =>
@@ -147,6 +178,7 @@ namespace Org.Benf.OleWoo.Typelib
                     x.BuildIDLInto(ih);
                     ih.AppendLine(string.Empty);
                 });
+
                 Children.FindAll(x => x.DisplayAtTLBLevel(interfaceNames)).ForEach(
                     x =>
                     {
@@ -181,4 +213,6 @@ namespace Org.Benf.OleWoo.Typelib
      * A dispinterface's first inherited interface is the swap for interface.
      */
 }
+
+
 

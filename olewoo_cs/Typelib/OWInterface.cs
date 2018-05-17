@@ -32,6 +32,7 @@ namespace Org.Benf.OleWoo.Typelib
         public override List<string> GetAttributes()
         {
             var lprops = new List<string> { $"uuid({_ta.guid})" };
+            
             var ta = new TypeAttr(_ti);
             if (ta.wMajorVerNum != 0 || ta.wMinorVerNum != 0)
             {
@@ -40,12 +41,23 @@ namespace Org.Benf.OleWoo.Typelib
             OWCustData.GetCustData(_ti, ref lprops);
             var help = _ti.GetHelpDocumentationById(-1, out var context);
             AddHelpStringAndContext(lprops, help, context);
-            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FHIDDEN)) lprops.Add("hidden");
+
+            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FAGGREGATABLE)) lprops.Add("aggregatable");
+            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FAPPOBJECT)) lprops.Add("appobject");
+            // TYPEFLAG_FCANCREATE is not applicable to interfaces/dispinterfaces
+            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FCONTROL)) lprops.Add("control");
+            // No IDL syntax for TYPEFLAG_FDISPATCHABLE -- it is computed
             if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FDUAL)) lprops.Add("dual");
-            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FRESTRICTED)) lprops.Add("restricted");
+            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FHIDDEN)) lprops.Add("hidden");
+            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FLICENSED)) lprops.Add("licensed");
             if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FNONEXTENSIBLE)) lprops.Add("nonextensible");
             if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FOLEAUTOMATION)) lprops.Add("oleautomation");
-
+            // Can't find IDL for TYPEFLAG_FPREDECLID?!?
+            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FPROXY)) lprops.Add("proxy");
+            // Can't find IDL for TYPEFLAG_FREPLACEABLE?!?
+            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FRESTRICTED)) lprops.Add("restricted");
+            // Can't find IDL for TYPEFLAG_FREVERSEBIND?!?
+            
             return lprops;
         }
 

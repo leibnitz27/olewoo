@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Org.Benf.OleWoo</RootNamespace>
     <AssemblyName>olewoo</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ApplicationIcon>
     </ApplicationIcon>
@@ -96,6 +96,7 @@
   <ItemGroup>
     <Compile Include="IDLHelper.cs" />
     <Compile Include="Listeners\TypeLibListener.cs" />
+    <Compile Include="PlainIDLFormatter.cs" />
     <Compile Include="Typelib\IClearUp.cs" />
     <Compile Include="Typelib\IDLData.cs" />
     <Compile Include="Typelib\IDLGrabber.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Typelib\OWIDispatchProperties.cs" />
     <Compile Include="Typelib\OWInheritedInterfaces.cs" />
     <Compile Include="Typelib\OWInterface.cs" />
+    <Compile Include="Typelib\OWCoClassInterface.cs" />
     <Compile Include="Typelib\OWMethod.cs" />
     <Compile Include="Typelib\OWModule.cs" />
     <Compile Include="Typelib\OWModuleConst.cs" />

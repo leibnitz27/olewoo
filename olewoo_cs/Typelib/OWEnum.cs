@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using olewoo_interop;
 
@@ -46,20 +47,29 @@ namespace Org.Benf.OleWoo.Typelib
             EnterElement();
             var tde = "typedef ";
             // If the enum has a uuid, or a version associate with it, we provide that information on the same line.
-
-            if (!_ta.guid.Equals(Guid.Empty))
+            if (_data.Attributes.Count > 0)
             {
                 var lprops = _data.Attributes;
+                if (_ta.guid == Guid.Empty)
+                {
+                    var rs = lprops.Where(p => p.StartsWith("uuid")).ToList();
+                    foreach (var s in rs)
+                    {
+                        lprops.Remove(s);
+                    }
+                }
                 tde += "[" + string.Join(",", lprops) + "]";
                 ih.AppendLine(tde);
-                tde = "";
+                tde = string.Empty;
             }
-            ih.AppendLine(tde + "enum {");
+
+            ih.AppendLine(tde + "enum " + _data.ShortName + "{");
             using (new IDLHelperTab(ih))
             {
                 var idx = 0;
                 Children.ForEach(x => ((OWEnumValue) x).BuildIDLInto(ih, true, ++idx == _ta.cVars));
             }
+            // Redundant but necessary to ensure MIDL will compile enum correctly without making up fake names that'll confuse object browsers
             ih.AppendLine("} " + _data.ShortName + ";");
             ExitElement();
         }

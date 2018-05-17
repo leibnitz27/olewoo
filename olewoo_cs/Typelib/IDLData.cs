@@ -2,7 +2,7 @@
 
 namespace Org.Benf.OleWoo.Typelib
 {
-    public struct IDLData
+    public class IDLData
     {
         public readonly ITlibNode Node;
         public List<string> Attributes;

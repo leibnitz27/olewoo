@@ -12,7 +12,6 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly string _name;
         private readonly TypeAttr _ta;
         private readonly ITypeInfo _ti;
-        private readonly IDLData _data;
 
         public OWCoClass(ITlibNode parent, ITypeInfo ti, TypeAttr ta)
         {
@@ -38,6 +37,9 @@ namespace Org.Benf.OleWoo.Typelib
             OWCustData.GetCustData(_ti, ref lprops);
             var help = _ti.GetHelpDocumentationById(-1, out var context);
             AddHelpStringAndContext(lprops, help, context);
+
+            if (0 == (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FCANCREATE)) lprops.Add("noncreatable");
+
             return lprops;
         }
 
@@ -76,14 +78,9 @@ namespace Org.Benf.OleWoo.Typelib
                     _ti.GetRefTypeOfImplType(x, out var href);
                     _ti.GetRefTypeInfo(href, out var ti2);
                     _ti.GetImplTypeFlags(x, out var itypflags);
-                    var res = new List<string>();
-                    if (0 != (itypflags & IMPLTYPEFLAGS.IMPLTYPEFLAG_FDEFAULT)) res.Add("default");
-                    if (0 != (itypflags & IMPLTYPEFLAGS.IMPLTYPEFLAG_FSOURCE)) res.Add("source");
 
-                    if (res.Count > 0) ih.AddString("[" + string.Join(", ", res.ToArray()) + "] ");
-                    ih.AddString("interface ");
-                    ih.AddLink(ti2.GetName(), "i");
-                    ih.AppendLine(";");
+                    var memInterface = new OWCoClassInterface(this, ti2, itypflags);
+                    memInterface.BuildIDLInto(ih);
                 }
             }
             ih.AppendLine("};");

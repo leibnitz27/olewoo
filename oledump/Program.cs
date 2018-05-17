@@ -7,6 +7,7 @@
  */
 
 using System;
+using Org.Benf.OleWoo;
 using Org.Benf.OleWoo.Typelib;
 
 namespace Org.Benf.OleDump

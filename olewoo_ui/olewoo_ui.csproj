@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{82205B28-7E7D-473D-AAE1-1D01C5D74031}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>olewoo_ui</RootNamespace>
+    <AssemblyName>olewoo_ui</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\olewoo_cs\olewoo_cs.csproj">
+      <Project>{01a3b377-bfdb-4679-943e-c897304d7785}</Project>
+      <Name>olewoo_cs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\olewoo_interop\olewoo_interop.vcxproj">
+      <Project>{06642ccc-1cd0-4c40-80b5-ee34fed21464}</Project>
+      <Name>olewoo_interop</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FileShellExtension.cs" />
+    <Compile Include="GuiElem\AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GuiElem\AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GuiElem\FindDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GuiElem\FindDialog.Designer.cs">
+      <DependentUpon>FindDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GuiElem\OleWoo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GuiElem\OleWoo.Designer.cs">
+      <DependentUpon>OleWoo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GuiElem\PnlOleText.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GuiElem\PnlOleText.Designer.cs">
+      <DependentUpon>PnlOleText.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GuiElem\PnlTextOrTabbed.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GuiElem\PnlTextOrTabbed.Designer.cs">
+      <DependentUpon>PnlTextOrTabbed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GuiElem\RichTextBoxEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GuiElem\TabControlCB.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GuiElem\TabControlCB.Designer.cs">
+      <DependentUpon>TabControlCB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GuiMisc\TBUpdateSuspender.cs" />
+    <Compile Include="GuiMisc\UpdateSuspender.cs" />
+    <Compile Include="MRUList.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="wooctrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="wooctrl.Designer.cs">
+      <DependentUpon>wooctrl.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="GuiElem\AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GuiElem\FindDialog.resx">
+      <DependentUpon>FindDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GuiElem\OleWoo.resx">
+      <DependentUpon>OleWoo.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GuiElem\PnlOleText.resx">
+      <DependentUpon>PnlOleText.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GuiElem\PnlTextOrTabbed.resx">
+      <DependentUpon>PnlTextOrTabbed.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GuiElem\TabControlCB.resx">
+      <DependentUpon>TabControlCB.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="wooctrl.resx">
+      <DependentUpon>wooctrl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="olewoo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
