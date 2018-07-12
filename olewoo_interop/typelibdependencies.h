@@ -4,6 +4,11 @@
 #include <comdef.h>
 #include <unordered_set>
 
+// The class aims to extract the dependent type
+// libraries for a given type library, using the
+// code provided at Stack Overflow:
+// https://stackoverflow.com/a/45090861/643342
+
 // gets dependencies of a type library
 std::unordered_set<ITypeLibPtr> GetDependencies(ITypeLib* pTypeLib);
 
