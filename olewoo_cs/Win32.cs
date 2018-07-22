@@ -4,13 +4,16 @@ using System.Runtime.InteropServices.ComTypes;
 
 namespace Org.Benf.OleWoo
 {
-    internal static class NativeMethods
+    public static class NativeMethods
     {
         [DllImport("user32.dll")]
         public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, ref int lParam);
 
         [DllImport("oleaut32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern int LoadTypeLib(string fileName, out ITypeLib typeLib);
+
+        [DllImport("oleaut32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
+        public static extern void ClearCustData(IntPtr pCustData);
 
         public static void SetTabs(this System.Windows.Forms.TextBox box, int nSpaces)
         {

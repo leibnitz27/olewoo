@@ -28,8 +28,7 @@ namespace Org.Benf.OleWoo.GuiElem
             try
             {
                 var tl = new OWTypeLib(fname);
-                var tp = new TabPage(tl.ShortName);
-                tp.ImageIndex = 0;
+                var tp = new TabPage(tl.ShortName) {ImageIndex = 0};
                 var wc = new Wooctrl(imglstTreeNodes, imgListMisc, tl);
                 tp.Controls.Add(wc);
                 tp.Tag = tl;
@@ -46,9 +45,12 @@ namespace Org.Benf.OleWoo.GuiElem
         
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var ofd = new OpenFileDialog();
-            ofd.Filter = "Dll files (*.dll)|*.dll|Typelibraries (*.tlb)|*.tlb|Executables (*.exe)|*.exe|ActiveX controls (*.ocx)|*.ocx|All files (*.*)|*.*";
-            ofd.CheckFileExists = true;
+            var ofd = new OpenFileDialog
+            {
+                Filter =
+                    "Dll files (*.dll)|*.dll|Type libraries (*.tlb)|*.tlb|Executables (*.exe)|*.exe|ActiveX controls (*.ocx)|*.ocx|Object Libraries (*.olb)|*.olb|All files (*.*)|*.*",
+                CheckFileExists = true
+            };
             switch (ofd.ShowDialog(this))
             {
                 case DialogResult.OK:
@@ -95,21 +97,25 @@ namespace Org.Benf.OleWoo.GuiElem
             // 
             // openToolStripMenuItem
             // 
-            var tmiOpen = new ToolStripMenuItem();
-            tmiOpen.Name = "openToolStripMenuItem";
-            tmiOpen.ShortcutKeys = ((Keys)((Keys.Control | Keys.O)));
-            tmiOpen.Size = new System.Drawing.Size(208, 22);
-            tmiOpen.Text = "&Open Typelibrary";
+            var tmiOpen = new ToolStripMenuItem
+            {
+                Name = "openToolStripMenuItem",
+                ShortcutKeys = ((Keys)((Keys.Control | Keys.O))),
+                Size = new System.Drawing.Size(208, 22),
+                Text = "&Open Typelibrary"
+            };
             tmiOpen.Click += new EventHandler(openToolStripMenuItem_Click);
             tsis.Add(tmiOpen);
 
-            VoidDelg addSep = () =>
+            void addSep()
             {
-                var tmiSep = new ToolStripSeparator();
-                tmiSep.Name = "toolStripMenuItem1";
-                tmiSep.Size = new System.Drawing.Size(205, 6);
+                var tmiSep = new ToolStripSeparator
+                {
+                    Name = "toolStripMenuItem1",
+                    Size = new System.Drawing.Size(205, 6)
+                };
                 tsis.Add(tmiSep);
-            };
+            }
 
             addSep();
 
@@ -119,9 +125,11 @@ namespace Org.Benf.OleWoo.GuiElem
                 var idx = 1;
                 foreach (var mrui in mru)
                 {
-                    var tmiMru = new ToolStripMenuItem();
-                    tmiMru.Tag = mrui;
-                    tmiMru.Size = new System.Drawing.Size(208, 22);
+                    var tmiMru = new ToolStripMenuItem
+                    {
+                        Tag = mrui,
+                        Size = new System.Drawing.Size(208, 22)
+                    };
                     var label = mrui;
                     if (label.Length > 35) label = label.Substring(0,10) + "..."+ label.Substring(label.Length - 20);
                     tmiMru.Text = "&" + (idx++) + " " + label;
@@ -130,19 +138,23 @@ namespace Org.Benf.OleWoo.GuiElem
                 }
                 addSep();
                 {
-                    var tmiMru = new ToolStripMenuItem();
-                    tmiMru.Size = new System.Drawing.Size(208, 22);
-                    tmiMru.Text = "&Clear Recent items list.";
+                    var tmiMru = new ToolStripMenuItem
+                    {
+                        Size = new System.Drawing.Size(208, 22),
+                        Text = "&Clear Recent items list."
+                    };
                     tmiMru.Click += new EventHandler(clearMRUItem_Click);
                     tsis.Add(tmiMru);
                 }
                 addSep();
             }
 
-            var tmiExit = new ToolStripMenuItem();
-            tmiExit.Name = "exitToolStripMenuItem";
-            tmiExit.Size = new System.Drawing.Size(208, 22);
-            tmiExit.Text = "E&xit";
+            var tmiExit = new ToolStripMenuItem
+            {
+                Name = "exitToolStripMenuItem",
+                Size = new System.Drawing.Size(208, 22),
+                Text = "E&xit"
+            };
             tmiExit.Click += new EventHandler(exitToolStripMenuItem_Click);
             tsis.Add(tmiExit);
 

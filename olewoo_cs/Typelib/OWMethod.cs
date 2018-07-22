@@ -19,12 +19,47 @@ namespace Org.Benf.OleWoo.Typelib
 
             var names = fd.GetNames(ti);
             _name = names[0];
+            _data= new IDLData(this);
         }
+
         public override string Name => _name;
 
         public override string ShortName => _name;
 
         public override string ObjectName => $"{_name}#m";
+
+        public override List<string> GetAttributes()
+        {
+            var lprops = new List<string>();
+            if (!MemIdInSpecialRange)
+            {
+                lprops.Add("id(" + _fd.memid.PaddedHex() + ")");
+            }
+            switch (_fd.invkind)
+            {
+                case FuncDesc.InvokeKind.INVOKE_PROPERTYGET:
+                    lprops.Add("propget");
+                    break;
+                case FuncDesc.InvokeKind.INVOKE_PROPERTYPUT:
+                    lprops.Add("propput");
+                    break;
+                case FuncDesc.InvokeKind.INVOKE_PROPERTYPUTREF:
+                    lprops.Add("propputref");
+                    break;
+            }
+            if (!MemIdInSpecialRange)
+            {
+                OWCustData.GetAllFuncCustData(_fd.memid, (INVOKEKIND) _fd.invkind, _ti, ref lprops);
+            }
+            var help = _ti.GetHelpDocumentationById(_fd.memid, out var context);
+            if (0 != (_fd.wFuncFlags & FuncDesc.FuncFlags.FUNCFLAG_FRESTRICTED)) lprops.Add("restricted");
+            if (0 != (_fd.wFuncFlags & FuncDesc.FuncFlags.FUNCFLAG_FHIDDEN)) lprops.Add("hidden");
+            AddHelpStringAndContext(lprops, help, context);
+
+            return lprops;
+        }
+
+        private bool MemIdInSpecialRange => (_fd.memid >= 0x60000000 && _fd.memid < 0x60020000);
 
         public override bool DisplayAtTLBLevel(ICollection<string> interfaceNames) => false;
 
@@ -42,7 +77,8 @@ namespace Org.Benf.OleWoo.Typelib
             if (0 != (flg & ParamDesc.ParamFlags.PARAMFLG_FOUT)) res.Add("out");
             if (0 != (flg & ParamDesc.ParamFlags.PARAMFLG_FRETVAL)) res.Add("retval");
             if (0 != (flg & ParamDesc.ParamFlags.PARAMFLG_FOPT)) res.Add("optional");
-            if (0 != (flg & ParamDesc.ParamFlags.PARAMFLG_FHASDEFAULT)) res.Add("defaultvalue(" + ITypeInfoXtra.QuoteString(pd.varDefaultValue) + ")");
+            if (0 != (flg & ParamDesc.ParamFlags.PARAMFLG_FLCID)) res.Add("lcid");
+            if (0 != (flg & ParamDesc.ParamFlags.PARAMFLG_FHASDEFAULT) && pd.varDefaultValue != null) res.Add("defaultvalue(" + ITypeInfoXtra.QuoteString(pd.varDefaultValue) + ")");
             return "[" + string.Join(", ", res.ToArray()) + "]";
         }
         public bool Property => _fd.invkind != FuncDesc.InvokeKind.INVOKE_FUNC;
@@ -54,28 +90,8 @@ namespace Org.Benf.OleWoo.Typelib
 
         public void BuildIDLInto(IDLFormatter ih, bool bAsDispatch)
         {
-            var memIdInSpecialRange = (_fd.memid >= 0x60000000 && _fd.memid < 0x60020000);
-            var lprops = new List<string>();
-            if (!memIdInSpecialRange)
-            {
-                lprops.Add("id(" + _fd.memid.PaddedHex() + ")");
-            }
-            switch (_fd.invkind)
-            {
-                case FuncDesc.InvokeKind.INVOKE_PROPERTYGET:
-                    lprops.Add("propget");
-                    break;
-                case FuncDesc.InvokeKind.INVOKE_PROPERTYPUT:
-                    lprops.Add("propput");
-                    break;
-                case FuncDesc.InvokeKind.INVOKE_PROPERTYPUTREF:
-                    lprops.Add("propputref");
-                    break;
-            }
-            var help = _ti.GetHelpDocumentationById(_fd.memid, out var context);
-            if (0 != (_fd.wFuncFlags & FuncDesc.FuncFlags.FUNCFLAG_FRESTRICTED)) lprops.Add("restricted");
-            if (0 != (_fd.wFuncFlags & FuncDesc.FuncFlags.FUNCFLAG_FHIDDEN)) lprops.Add("hidden");
-            AddHelpStringAndContext(lprops, help, context);
+            EnterElement();
+            var lprops = _data.Attributes;
             ih.AppendLine("[" + string.Join(", ", lprops.ToArray()) + "] ");
             // Prototype in a different line.
             var ed = _fd.elemdescFunc;
@@ -95,7 +111,7 @@ namespace Org.Benf.OleWoo.Typelib
 
                 paramtextgen = x =>
                 {
-                    var paramname = (names[x + 1] == null) ? "rhs" : names[x + 1];
+                    var paramname = names[x + 1] ?? "rhs";
                     var edp = edps[x];
                     ih.AddString(ParamFlagsDescription(edp.paramdesc) + " ");
                     edp.tdesc.ComTypeNameAsString(_ti, ih);
@@ -103,11 +119,11 @@ namespace Org.Benf.OleWoo.Typelib
                 };
             }
             (bRetvalPresent ? elast : ed).tdesc.ComTypeNameAsString(_ti, ih);
-            if (memIdInSpecialRange)
+            if (MemIdInSpecialRange)
             {
                 ih.AddString(" " + _fd.callconv.ToString().Substring(2).ToLower());
             }
-            ih.AddString($" {_name}");
+            ih.AddString($" {_data.Name}");
             switch (_fd.cParams)
             {
                 case 0:
@@ -130,6 +146,22 @@ namespace Org.Benf.OleWoo.Typelib
                     }
                     ih.AppendLine(");");
                     break;
+            }
+            ExitElement();
+        }
+        public override void EnterElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.EnterMethod(this);
+            }
+        }
+
+        public override void ExitElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.ExitMethod(this);
             }
         }
     }

@@ -16,6 +16,7 @@ namespace Org.Benf.OleWoo.Typelib
             var ig = new IDLGrabber();
             vd.elemDescVar.tdesc.ComTypeNameAsString(ti, ig);
             _type = ig.Value;
+            _data = new IDLData(this);
         }
         public override string Name => _type + " " + _name;
         public override string ShortName => _name;
@@ -35,7 +36,30 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public override void BuildIDLInto(IDLFormatter ih)
         {
-            ih.AppendLine(Name + ";");
+            EnterElement();
+            ih.AppendLine(_data.Name + ";");
+            ExitElement();
+        }
+
+        public override List<string> GetAttributes()
+        {
+            return new List<string>();
+        }
+
+        public override void EnterElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.EnterRecordMember(this);
+            }
+        }
+
+        public override void ExitElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.ExitRecordMember(this);
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ namespace Org.Benf.OleWoo.Typelib
     {
         protected TypeAttr _ta;
         protected ITypeInfo _ti;
+
         public OWInheritedInterfaces(ITlibNode parent, ITypeInfo ti, TypeAttr ta)
         {
             Parent = parent;
@@ -42,7 +43,29 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public override void BuildIDLInto(IDLFormatter ih)
         {
+            EnterElement();
             ih.AppendLine("");
+            ExitElement();
+        }
+
+        public override List<string> GetAttributes()
+        {
+            return new List<string>();
+        }
+        public override void EnterElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.EnterInheritedInterfaces(this);
+            }
+        }
+
+        public override void ExitElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.ExitInheritedInterfaces(this);
+            }
         }
     }
 }

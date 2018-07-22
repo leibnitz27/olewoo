@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using olewoo_interop;
 
@@ -10,14 +11,17 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly string _name;
         private readonly TypeAttr _ta;
         private readonly ITypeInfo _ti;
+
         public OWEnum(ITlibNode parent, ITypeInfo ti, TypeAttr ta)
         {
             Parent = parent;
             _name = ti.GetName();
             _ta = ta;
             _ti = ti;
+            _data = new IDLData(this);
         }
-        public override string Name => "typedef enum " + _name;
+
+        public override string Name => "enum " + _name;
         public override string ShortName => _name;
         public override string ObjectName => _name + "#i";
 
@@ -40,22 +44,59 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public override void BuildIDLInto(IDLFormatter ih)
         {
+            EnterElement();
             var tde = "typedef ";
             // If the enum has a uuid, or a version associate with it, we provide that information on the same line.
-
-            if (!_ta.guid.Equals(Guid.Empty))
+            if (_data.Attributes.Count > 0)
             {
-                tde += "[uuid(" + _ta.guid + "), version(" + _ta.wMajorVerNum + "." + _ta.wMinorVerNum + ")]";
+                var lprops = _data.Attributes;
+                if (_ta.guid == Guid.Empty)
+                {
+                    var rs = lprops.Where(p => p.StartsWith("uuid")).ToList();
+                    foreach (var s in rs)
+                    {
+                        lprops.Remove(s);
+                    }
+                }
+                tde += "[" + string.Join(",", lprops) + "]";
                 ih.AppendLine(tde);
-                tde = "";
+                tde = string.Empty;
             }
-            ih.AppendLine(tde + "enum {");
+
+            ih.AppendLine(tde + "enum " + _data.ShortName + "{");
             using (new IDLHelperTab(ih))
             {
                 var idx = 0;
                 Children.ForEach(x => ((OWEnumValue) x).BuildIDLInto(ih, true, ++idx == _ta.cVars));
             }
-            ih.AppendLine("} " + _name + ";");
+            // Redundant but necessary to ensure MIDL will compile enum correctly without making up fake names that'll confuse object browsers
+            ih.AppendLine("} " + _data.ShortName + ";");
+            ExitElement();
+        }
+
+        public override List<string> GetAttributes()
+        {
+            var lprops = new List<string>
+            {
+                "uuid(" + _ta.guid + ")",
+                "version(" + _ta.wMajorVerNum + "." + _ta.wMinorVerNum + ")"
+            };
+            return lprops;
+        }
+        public override void EnterElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.EnterEnum(this);
+            }
+        }
+
+        public override void ExitElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.ExitEnum(this);
+            }
         }
     }
 }

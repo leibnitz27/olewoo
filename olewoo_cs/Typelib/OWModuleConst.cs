@@ -23,8 +23,9 @@ namespace Org.Benf.OleWoo.Typelib
             {
                 _val = (_val as string).ReEscape();
             }
+            _data = new IDLData(this);
         }
-        public override string Name => "const " + _name + " = " + _val;
+        public override string Name => "const " + _name;
         public override string ShortName => _name;
         public override string ObjectName => null;
 
@@ -47,6 +48,7 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public void BuildIDLInto(IDLFormatter ih, bool embedded, bool islast)
         {
+            EnterElement();
             var desc = "";
             //int cnt = 0;
             //String help = _ti.GetHelpDocumentationById(_idx, out cnt);
@@ -57,11 +59,35 @@ namespace Org.Benf.OleWoo.Typelib
             //    desc += "[" + String.Join(",", props.ToArray()) + "] ";
             //}
             desc += _val is int i ? negStr(i) : _val.ToString();
-            ih.AppendLine("const " + _name + " = " + desc + (embedded ? (islast ? "" : ",") : ";"));
+            ih.AppendLine(_data.Name + " = " + desc + (embedded ? (islast ? "" : ",") : ";"));
+            ExitElement();
         }
+
         public override void BuildIDLInto(IDLFormatter ih)
         {
+            EnterElement();
             BuildIDLInto(ih, false, false);
+            ExitElement();
+        }
+
+        public override List<string> GetAttributes()
+        {
+            return new List<string>();
+        }
+        public override void EnterElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.EnterModuleConst(this);
+            }
+        }
+
+        public override void ExitElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.ExitModuleConst(this);
+            }
         }
     }
 }

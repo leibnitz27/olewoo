@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Text;
-using Org.Benf.OleWoo;
 
-namespace Org.Benf.OleDump
+namespace Org.Benf.OleWoo
 {
-    class PlainIDLFormatter : IDLFormatter
+    public class PlainIDLFormatter : IDLFormatter
     {
         private readonly StringBuilder _sb;
         bool _bPendingApplyTabs;

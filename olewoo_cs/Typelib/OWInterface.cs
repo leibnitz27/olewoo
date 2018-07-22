@@ -18,7 +18,9 @@ namespace Org.Benf.OleWoo.Typelib
             _ta = ta;
             _ti = ti;
             _topLevel = topLevel;
+            _data = new IDLData(this);
         }
+
         public override int ImageIndex => (int)ImageIndices.idx_interface; 
 
         public override string Name => (_topLevel ? "interface " : "") + _name;
@@ -26,6 +28,38 @@ namespace Org.Benf.OleWoo.Typelib
         public override string ObjectName => $"{_name}#i";
 
         public override string ShortName => _name;
+
+        public override List<string> GetAttributes()
+        {
+            var lprops = new List<string> { $"uuid({_ta.guid})" };
+            
+            var ta = new TypeAttr(_ti);
+            if (ta.wMajorVerNum != 0 || ta.wMinorVerNum != 0)
+            {
+                lprops.Add($"version({ta.wMajorVerNum}.{ta.wMinorVerNum})");
+            }
+            OWCustData.GetCustData(_ti, ref lprops);
+            var help = _ti.GetHelpDocumentationById(-1, out var context);
+            AddHelpStringAndContext(lprops, help, context);
+
+            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FAGGREGATABLE)) lprops.Add("aggregatable");
+            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FAPPOBJECT)) lprops.Add("appobject");
+            // TYPEFLAG_FCANCREATE is not applicable to interfaces/dispinterfaces
+            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FCONTROL)) lprops.Add("control");
+            // No IDL syntax for TYPEFLAG_FDISPATCHABLE -- it is computed
+            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FDUAL)) lprops.Add("dual");
+            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FHIDDEN)) lprops.Add("hidden");
+            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FLICENSED)) lprops.Add("licensed");
+            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FNONEXTENSIBLE)) lprops.Add("nonextensible");
+            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FOLEAUTOMATION)) lprops.Add("oleautomation");
+            // Can't find IDL for TYPEFLAG_FPREDECLID?!?
+            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FPROXY)) lprops.Add("proxy");
+            // Can't find IDL for TYPEFLAG_FREPLACEABLE?!?
+            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FRESTRICTED)) lprops.Add("restricted");
+            // Can't find IDL for TYPEFLAG_FREVERSEBIND?!?
+            
+            return lprops;
+        }
 
         public override bool DisplayAtTLBLevel(ICollection<string> interfaceNames) => true;
 
@@ -51,15 +85,9 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public override void BuildIDLInto(IDLFormatter ih)
         {
+            EnterElement();
             ih.AppendLine("[");
-            var lprops = new List<string> {$"uuid({_ta.guid})"};
-            var help = _ti.GetHelpDocumentationById(-1, out var context);
-            AddHelpStringAndContext(lprops, help, context);
-            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FHIDDEN)) lprops.Add("hidden");
-            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FDUAL)) lprops.Add("dual");
-            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FRESTRICTED)) lprops.Add("restricted");
-            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FNONEXTENSIBLE)) lprops.Add("nonextensible");
-            if (0 != (_ta.wTypeFlags & TypeAttr.TypeFlags.TYPEFLAG_FOLEAUTOMATION)) lprops.Add("oleautomation");
+            var lprops = _data.Attributes;
             for (var i = 0; i < lprops.Count; ++i)
             {
                 ih.AppendLine("  " + lprops[i] + (i < (lprops.Count - 1) ? "," : ""));
@@ -70,19 +98,35 @@ namespace Org.Benf.OleWoo.Typelib
             {
                 _ti.GetRefTypeOfImplType(0, out var href);
                 _ti.GetRefTypeInfo(href, out var ti2);
-                ih.AddString($"interface {_name} : ");
+                ih.AddString($"{_data.Name} : ");
                 ih.AddLink(ti2.GetName(), "i");
                 ih.AppendLine(" {");
             }
             else
             {
-                ih.AppendLine("interface " + _name + " {");
+                ih.AppendLine("interface " + _data.Name + " {");
             }
             using (new IDLHelperTab(ih))
             {
                 Children.ForEach( x => x.BuildIDLInto(ih) );
             }
             ih.AppendLine("};");
+            ExitElement();
+        }
+        public override void EnterElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.EnterInterface(this);
+            }
+        }
+
+        public override void ExitElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.ExitInterface(this);
+            }
         }
     }
 }

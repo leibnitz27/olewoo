@@ -11,6 +11,7 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly ITypeInfo _ti;
         private readonly TypeAttr _ta;
         private readonly string _dllname;
+
         public OWModule(ITlibNode parent, ITypeInfo ti, TypeAttr ta)
         {
             Parent = parent;
@@ -30,6 +31,7 @@ namespace Org.Benf.OleWoo.Typelib
             {
                 _dllname = null;
             }
+            _data = new IDLData(this);
         }
         public override string Name => "module " + _name;
         public override string ShortName => _name;
@@ -71,6 +73,7 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public override void BuildIDLInto(IDLFormatter ih)
         {
+            EnterElement();
             if (_ta.cFuncs == 0)
             {
                 ih.AppendLine("// NOTE: This module has no entry points. There is no way to");
@@ -78,6 +81,21 @@ namespace Org.Benf.OleWoo.Typelib
                 ih.AppendLine("// ");
             }
             ih.AppendLine("[");
+            var liba = _data.Attributes;
+            var cnt = 0;
+            liba.ForEach(x => ih.AppendLine("  " + x + (++cnt == liba.Count ? "" : ",")));
+            ih.AppendLine("]");
+            ih.AppendLine(_data.Name + " {");
+            using (new IDLHelperTab(ih))
+            {
+                Children.ForEach(x => x.BuildIDLInto(ih));
+            }
+            ih.AppendLine("};");
+            ExitElement();
+        }
+
+        public override List<string> GetAttributes()
+        {
             var liba = new List<string>
             {
                 "dllname(\"" + (string.IsNullOrEmpty(_dllname) ? "<no entry points>" : _dllname) + "\")"
@@ -88,15 +106,22 @@ namespace Org.Benf.OleWoo.Typelib
             if (!string.IsNullOrEmpty(help)) liba.Add("helpstring(\"" + help + "\")");
             if (cnt != 0) liba.Add("helpcontext(" + cnt.PaddedHex() + ")");
 
-            cnt = 0;
-            liba.ForEach(x => ih.AppendLine("  " + x + (++cnt == liba.Count ? "" : ",")));
-            ih.AppendLine("]");
-            ih.AppendLine("module " + _name + " {");
-            using (new IDLHelperTab(ih))
+            return liba;
+        }
+        public override void EnterElement()
+        {
+            foreach (var listener in Listeners)
             {
-                Children.ForEach(x => x.BuildIDLInto(ih));
+                listener.EnterModule(this);
             }
-            ih.AppendLine("};");
+        }
+
+        public override void ExitElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.ExitModule(this);
+            }
         }
     }
 }

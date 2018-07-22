@@ -10,6 +10,7 @@ namespace Org.Benf.OleWoo.Typelib
         private readonly VarDesc _vd;
         private readonly ITypeInfo _ti;
         private readonly int _val;
+
         public OWEnumValue(ITlibNode parent, ITypeInfo ti, VarDesc vd)
         {
             Parent = parent;
@@ -17,8 +18,10 @@ namespace Org.Benf.OleWoo.Typelib
             _val = (int)vd.varValue;
             _vd = vd;
             _ti = ti;
+            _data = new IDLData(this);
         }
-        public override string Name => "const int " + _name + " = " + _val;
+
+        public override string Name => _name + " = " + negStr(_val);
         public override string ShortName => _name;
         public override string ObjectName => null;
 
@@ -41,11 +44,33 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public void BuildIDLInto(IDLFormatter ih, bool embedded, bool islast)
         {
-            ih.AppendLine("const int " + _ti.GetDocumentationById(_vd.memid) + " = " + negStr(_val) + (embedded ? (islast ? "" : ",") : ";"));
+            EnterElement();
+            ih.AppendLine(_data.Name + (embedded ? (islast ? "" : ",") : ";"));
+            ExitElement();
         }
         public override void BuildIDLInto(IDLFormatter ih)
         {
             BuildIDLInto(ih, false, false);
+        }
+
+        public override List<string> GetAttributes()
+        {
+            return new List<string>();
+        }
+        public override void EnterElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.EnterEnumValue(this);
+            }
+        }
+
+        public override void ExitElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.ExitEnumValue(this);
+            }
         }
     }
 }

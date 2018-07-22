@@ -30,7 +30,29 @@ namespace Org.Benf.OleWoo.Typelib
         }
         public override void BuildIDLInto(IDLFormatter ih)
         {
+            EnterElement();
             Children.ForEach(x => x.BuildIDLInto(ih));
+            ExitElement();
+        }
+
+        public override List<string> GetAttributes()
+        {
+            return new List<string>();
+        }
+        public override void EnterElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.EnterChildrenIndirect(this);
+            }
+        }
+
+        public override void ExitElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.ExitChildrenIndirect(this);
+            }
         }
     }
 }

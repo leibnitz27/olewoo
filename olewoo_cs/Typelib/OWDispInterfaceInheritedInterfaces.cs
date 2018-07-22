@@ -18,5 +18,20 @@ namespace Org.Benf.OleWoo.Typelib
             var res = new List<ITlibNode> {new OWInterface(this, ti, ta, false)};
             return res;
         }
+        public override void EnterElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.EnterDispInterfaceInheritedInterface(this);
+            }
+        }
+
+        public override void ExitElement()
+        {
+            foreach (var listener in Listeners)
+            {
+                listener.ExitDispInterfaceInheritedInterface(this);
+            }
+        }
     }
 }

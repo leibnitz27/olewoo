@@ -64,6 +64,10 @@ namespace Org.Benf.OleWoo.Typelib
         public static string QuoteString(object o)
         {
             if (o == null) return "";
+            if (o is bool b)
+            {
+                return b ? "-1" : "0";
+            }
             if (o is string)
             {
                 return $"\"{o}\"";

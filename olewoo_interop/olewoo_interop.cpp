@@ -6,7 +6,6 @@
  *
  */
 #include "stdafx.h"
-
 #include "olewoo_interop.h"
 
 using namespace olewoo_interop;
@@ -43,3 +42,7 @@ void TypeAttr::ReplaceTypeInfo(System::Runtime::InteropServices::ComTypes::IType
 }
 */
 
+TypeDesc ^ ArrayDesc::getTypeDesc()
+{
+	return gcnew TypeDesc(m_pad->tdescElem);
+}

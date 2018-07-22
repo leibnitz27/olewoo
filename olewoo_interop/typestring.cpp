@@ -9,10 +9,9 @@
 #include "olewoo_interop.h"
 #include <sstream>
 #include <string>
+#include <msclr/marshal.h>
 
 using namespace olewoo_interop;
-
-
 
 namespace olewoo_interop
 {
@@ -21,7 +20,7 @@ void stringifyCustomType(HREFTYPE refType, ITypeInfo* pti, IDLFormatter_iop ^ if
 {
     CComPtr<ITypeInfo> pTypeInfo(pti);
     CComPtr<ITypeInfo> pCustTypeInfo;
-    HRESULT hr(pTypeInfo->GetRefTypeInfo(refType, &pCustTypeInfo));
+	HRESULT hr(pTypeInfo->GetRefTypeInfo(refType, &pCustTypeInfo));
     if(hr)
 	{
 		ift->AddString("UnknownCustomType");
