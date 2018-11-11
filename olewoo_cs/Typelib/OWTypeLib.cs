@@ -43,13 +43,18 @@ namespace Org.Benf.OleWoo.Typelib
                 liba.Add($"uuid({tla.guid})");
                 liba.Add($"version({tla.wMajorVerNum}.{tla.wMinorVerNum})");
             }
-            var cds = new CustomDatas(_tlib as ITypeLib2);
+
+            if (_tlib is ITypeLib2 tlib2)
             {
-                foreach (var cd in cds.Items)
+                var cds = new CustomDatas(tlib2);
                 {
-                    liba.Add("custom(" + cd.guid + ", " + ITypeInfoXtra.QuoteString(cd.varValue) + ")");
+                    foreach (var cd in cds.Items)
+                    {
+                        liba.Add("custom(" + cd.guid + ", " + ITypeInfoXtra.QuoteString(cd.varValue) + ")");
+                    }
                 }
             }
+
             var help = _tlib.GetHelpDocumentation(out var cnt);
             if (!string.IsNullOrEmpty(help)) liba.Add($"helpstring(\"{help}\")");
             if (cnt != 0) liba.Add($"helpcontext({cnt.PaddedHex()})");
