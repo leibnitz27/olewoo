@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
 using Org.Benf.OleWoo.GuiMisc;
@@ -87,9 +88,14 @@ namespace Org.Benf.OleWoo.GuiElem
                     rtfOleText.Text = "";
                     if (tn != null)
                     {
+                        _fo.RestartTimer();
                         tn.BuildIDLInto(_fo);
                         _fo.Flush();
                         rtfOleText.Select(0, 0);
+                        if (_fo.EmitLinksDisabledTooSlow)
+                        {
+                            MessageBox.Show("Links partially disabled as render took > 10s.", "OleWoo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
                     }
                     if (_std != null)
                     {
@@ -181,12 +187,21 @@ namespace Org.Benf.OleWoo.GuiElem
         private StringBuilder _sb;
         private RichTextBoxEx _rtb;
         private bool _bPendingApplyTabs;
+        private readonly Stopwatch _stopwatch = new Stopwatch();
+        // Emitting links is slower than I'd like - if the current render takes more than 10s, disable links.
+        private bool _bEmitLinks = true;
 
         public RichIDLFormatter(RichTextBoxEx rtb)
         {
             _sb = new StringBuilder();
             _rtb = rtb;
             _bPendingApplyTabs = false;
+        }
+
+        public void RestartTimer()
+        {
+            _bEmitLinks = true;
+            _stopwatch.Restart();
         }
 
         public override void NewLine()
@@ -217,9 +232,28 @@ namespace Org.Benf.OleWoo.GuiElem
 
         public override void AddLink(string s, string s2)
         {
-            if (_bPendingApplyTabs) ApplyTabs();
-            Flush();
-            _rtb.InsertLink(s, s2);
+            if (!_bEmitLinks)
+            {
+                AddString(s);
+            }
+            else
+            {
+                if (_stopwatch.ElapsedMilliseconds > 10000)
+                {
+                    _bEmitLinks = false;
+                }
+                if (_bPendingApplyTabs) ApplyTabs();
+                Flush();
+                _rtb.InsertLink(s, s2);
+            }
+        }
+
+        public bool EmitLinksDisabledTooSlow
+        {
+            get
+            {
+                return !_bEmitLinks;
+            }
         }
 
         public void Flush()

@@ -55,7 +55,7 @@ void stringifyTypeDesc(TYPEDESC* typeDesc, ITypeInfo* pTypeInfo, IDLFormatter_io
     }
     if(typeDesc->vt == VT_CARRAY) {
         stringifyTypeDesc(&typeDesc->lpadesc->tdescElem, pTypeInfo, ift);
-        for(int dim(0); typeDesc->lpadesc->cDims; ++dim) 
+        for(int dim = 0; dim < typeDesc->lpadesc->cDims; ++dim) 
 		{
 			std::stringstream oss;
             oss<< '['<< typeDesc->lpadesc->rgbounds[dim].lLbound<< "..."

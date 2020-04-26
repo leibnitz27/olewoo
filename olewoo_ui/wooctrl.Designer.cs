@@ -30,7 +30,7 @@ namespace Org.Benf.OleWoo
         /// </summary>
         private void InitializeComponent()
         {
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(Wooctrl));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Wooctrl));
             this.pnlMatchesList = new System.Windows.Forms.Panel();
             this.lstNodeMatches = new System.Windows.Forms.ListBox();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -48,13 +48,14 @@ namespace Org.Benf.OleWoo
             this.label1 = new System.Windows.Forms.Label();
             this.pnlDisplayContainer = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.txtOleDescrPlain = new PnlTextOrTabbed();
+            this.txtOleDescrPlain = new Org.Benf.OleWoo.GuiElem.PnlTextOrTabbed();
             this.pnlSearchAll = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.btnAddNodeTabl = new System.Windows.Forms.Button();
             this.pnlMatchesList.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.spltMainSearch)).BeginInit();
             this.spltMainSearch.Panel1.SuspendLayout();
             this.spltMainSearch.Panel2.SuspendLayout();
             this.spltMainSearch.SuspendLayout();
@@ -282,7 +283,7 @@ namespace Org.Benf.OleWoo
             this.btnAddNodeTabl.UseVisualStyleBackColor = true;
             this.btnAddNodeTabl.Click += new System.EventHandler(this.btnAddNodeTabl_Click);
             // 
-            // wooctrl
+            // Wooctrl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -295,6 +296,7 @@ namespace Org.Benf.OleWoo
             this.panel3.ResumeLayout(false);
             this.spltMainSearch.Panel1.ResumeLayout(false);
             this.spltMainSearch.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.spltMainSearch)).EndInit();
             this.spltMainSearch.ResumeLayout(false);
             this.panel7.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
