@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+    <?define UPGRADE_CODE="B6E28170-3F1B-44A6-AFC8-3F4B82A20F37"?>
+  <?define OUTPUT_CAB="olewoo"?>
+  <?define SOURCE="..\\$(var.Configuration)"?>
+  <?define PRODUCT_NAME = "OLEWOO"?>
+  <?define PRODUCT_DESC = "Type Library Viewer"?>
+  <?define MANUFACTURER="Liebnitz"?>
+  <?define LICENSE="..\\License.txt" ?>
+   
+  <?include Version.wxi?>
+
+  <Product Id="*" Name="$(var.PRODUCT_NAME)" Language="1033" Version="$(var.OLEWOO_VERSION)"
+           Manufacturer="$(var.MANUFACTURER)" UpgradeCode="$(var.UPGRADE_CODE)">
+
+    <Package InstallerVersion="400" Compressed="yes" Description="$(var.PRODUCT_NAME) $(var.PRODUCT_DESC)"
+             InstallPrivileges="limited" InstallScope="perUser" Manufacturer="$(var.MANUFACTURER)" Platform="x86"  />
+
+    <!-- Upgrade details -->
+
+    <Property Id="PREVIOUSVERSIONINSTALLED" Secure="yes" />
+    <Property Id="NEWERVERSIONINSTALLED" Secure="yes" />
+
+    <Upgrade Id="$(var.UPGRADE_CODE)">
+
+      <UpgradeVersion OnlyDetect="no" Property="PREVIOUSVERSIONINSTALLED" IncludeMaximum="yes" Maximum="$(var.OLEWOO_VERSION)" />
+
+      <UpgradeVersion OnlyDetect="yes" Property="NEWERVERSIONINSTALLED" IncludeMinimum="no" Minimum="$(var.OLEWOO_VERSION)" />
+    </Upgrade>
+
+    <InstallExecuteSequence>
+      <RemoveExistingProducts Before="InstallInitialize"></RemoveExistingProducts>
+    </InstallExecuteSequence>
+
+    <Condition Message="A newer version of [ProductName] is already installed. The newer version must first be uninstalled.">NOT (NEWERVERSIONINSTALLED OR NEWERVERSIONINSTALLED64)</Condition>
+    <!-- End of upgrade details -->
+
+    <Media Id="1" Cabinet="$(var.OUTPUT_CAB).cab" EmbedCab="yes" />
+
+    <!--    Check for .NET 4.6.1    -->
+    <!-- https://www.mking.net/blog/detecting-dotnet-framework-versions-with-wix -->
+    <!-- https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed -->
+    <PropertyRef Id='WIXNETFX4RELEASEINSTALLED'/>
+    <Condition Message="This software requires the .NET Framework 4.6.1 (or later).">
+      <![CDATA[Installed OR (WIXNETFX4RELEASEINSTALLED >= "#394254")]]>
+    </Condition>
+   
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="LocalAppDataFolder">
+         <Directory Id="INSTALLLOCATION" Name="$(var.PRODUCT_NAME)">
+          </Directory>        
+      </Directory>
+
+      <Directory Id="ProgramMenuFolder" Name="PMenu" >
+          <Directory Id="ProgramMenuDir" Name="$(var.PRODUCT_NAME)"/>
+        </Directory>
+          </Directory>
+
+    <ComponentGroup Id="Components">
+
+      <!--Begin Help Files-->
+      <Component Id="ProgramItems"  Guid="ABD7F86F-7282-497C-A6D3-858D52162995" Directory="INSTALLLOCATION" Permanent="no" >
+        <RegistryValue Root='HKCU' Key='Software\$(var.MANUFACTURER)\$(var.PRODUCT_NAME)' Name='installed' Type='integer' Value='1' KeyPath='yes' />
+        <File Id="olewoo_ui.exe" Source="$(var.SOURCE)\olewoo_ui.exe" Vital="yes"  />
+        <File Id="oledump.exe" Source="$(var.SOURCE)\oledump.exe" Vital="yes"  />
+        <File Id="olewoo.dll" Source="$(var.SOURCE)\olewoo.dll" Vital="yes"  />
+        <File Id="olewoo_interop.dll" Source="$(var.SOURCE)\olewoo_interop.dll" Vital="yes"  />
+        <File Id="licence.txt" Source="$(var.LICENSE)" Vital="yes"  />
+        <Environment Id="PATH" Name="PATH" Value="[INSTALLLOCATION]" Permanent="no" Part="last" Action="set" System="no" />
+      </Component>
+      <!--End Help Files-->
+    
+    </ComponentGroup>
+
+    <DirectoryRef Id="ProgramMenuDir">
+      <Component Id="Shortcuts" Guid="{750065A8-A672-48B4-A779-F038B50F9095}" >
+
+        <Shortcut Id="OleWooShortCut" Name="$(var.PRODUCT_NAME)" Description="$(var.PRODUCT_DESC)"
+                  Target="[INSTALLLOCATION]olewoo_ui.exe" WorkingDirectory="INSTALLLOCATION" />       
+        
+        <RemoveFolder Id="RemoveINSTALLLOCATION" Directory="INSTALLLOCATION" On="uninstall"/>
+        <RemoveFolder Id="RemoveProgramMenuDir" Directory="ProgramMenuDir" On="uninstall" />
+        <RegistryValue Root="HKCU" Key="Software\$(var.MANUFACTURER)\$(var.PRODUCT_NAME)" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+   
+    <Feature Id="All" Title="$(var.PRODUCT_NAME)" Level="1" >
+      <ComponentRef Id="Shortcuts"/>
+      <ComponentRef Id="ProgramItems"/>
+    </Feature>
+
+    
+    <!-- To use the following you need to reference WixUIExtension.dll in the WIX program files folder -->
+    <!--<UIRef Id="WixUI_Minimal" />-->
+    <!--<WixVariable Id="WixUILicenseRtf" Value="Licence.rtf" />-->
+    <!--<WixVariable Id="WixUIBannerBmp" Value="Banner.bmp" />-->
+    <!--<WixVariable Id="WixUIDialogBmp" Value="DlgBmp.bmp" />-->
+
+  </Product>
+
+</Wix>
