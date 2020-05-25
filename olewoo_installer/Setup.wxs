@@ -13,6 +13,8 @@
   <Product Id="*" Name="$(var.PRODUCT_NAME)" Language="1033" Version="$(var.OLEWOO_VERSION)"
            Manufacturer="$(var.MANUFACTURER)" UpgradeCode="$(var.UPGRADE_CODE)">
 
+
+
     <Package InstallerVersion="400" Compressed="yes" Description="$(var.PRODUCT_NAME) $(var.PRODUCT_DESC)"
              InstallPrivileges="limited" InstallScope="perUser" Manufacturer="$(var.MANUFACTURER)" Platform="x86"  />
 
@@ -35,6 +37,9 @@
     <Condition Message="A newer version of [ProductName] is already installed. The newer version must first be uninstalled.">NOT (NEWERVERSIONINSTALLED OR NEWERVERSIONINSTALLED64)</Condition>
     <!-- End of upgrade details -->
 
+    <Icon Id="olewoo.ico" SourceFile="..\olewoo_ui\olewoo.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="olewoo.ico" />    
+    
     <Media Id="1" Cabinet="$(var.OUTPUT_CAB).cab" EmbedCab="yes" />
 
     <!--    Check for .NET 4.6.1    -->
@@ -52,10 +57,10 @@
           </Directory>        
       </Directory>
 
-      <Directory Id="ProgramMenuFolder" Name="PMenu" >
-          <Directory Id="ProgramMenuDir" Name="$(var.PRODUCT_NAME)"/>
-        </Directory>
-          </Directory>
+      <Directory Id="ProgramMenuFolder" Name="PMenu" />
+     
+     
+    </Directory>
 
     <ComponentGroup Id="Components">
 
@@ -73,14 +78,13 @@
     
     </ComponentGroup>
 
-    <DirectoryRef Id="ProgramMenuDir">
+    <DirectoryRef Id="ProgramMenuFolder">
       <Component Id="Shortcuts" Guid="{750065A8-A672-48B4-A779-F038B50F9095}" >
 
         <Shortcut Id="OleWooShortCut" Name="$(var.PRODUCT_NAME)" Description="$(var.PRODUCT_DESC)"
-                  Target="[INSTALLLOCATION]olewoo_ui.exe" WorkingDirectory="INSTALLLOCATION" />       
+                  Target="[INSTALLLOCATION]olewoo_ui.exe" WorkingDirectory="INSTALLLOCATION" Icon="olewoo.ico" />       
         
         <RemoveFolder Id="RemoveINSTALLLOCATION" Directory="INSTALLLOCATION" On="uninstall"/>
-        <RemoveFolder Id="RemoveProgramMenuDir" Directory="ProgramMenuDir" On="uninstall" />
         <RegistryValue Root="HKCU" Key="Software\$(var.MANUFACTURER)\$(var.PRODUCT_NAME)" Name="installed" Type="integer" Value="1" KeyPath="yes" />
       </Component>
     </DirectoryRef>
