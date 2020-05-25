@@ -42,9 +42,12 @@
     <!-- Installer icon in Settings/Apps and Control Panel/Programs and Features -->
     <Property Id="ARPPRODUCTICON" Value="olewoo.ico" />   
     
-    <!-- Manufacturer URL and Help URL -->
+    <!-- Manufacturer (support) URL displayed in Control Panel / Programs and Features -->
     <Property Id="ARPURLINFOABOUT" Value="$(var.GITHUB_URL)" />
-    <Property Id="ARPHELPLINK" Value="$(var.GITHUB_URL)" />
+
+    <!-- Help URL displayed in Control Panel / Programs and Features -->
+    <!-- Commented out as it's superfluous, but this shows how it's done.-->
+    <!--<Property Id="ARPHELPLINK" Value="$(var.GITHUB_URL)" /> -->
     
     <!-- Media -->
     <Media Id="1" Cabinet="$(var.OUTPUT_CAB).cab" EmbedCab="yes" />
