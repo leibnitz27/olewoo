@@ -3,9 +3,9 @@
     <?define UPGRADE_CODE="B6E28170-3F1B-44A6-AFC8-3F4B82A20F37"?>
   <?define OUTPUT_CAB="olewoo"?>
   <?define SOURCE="..\\$(var.Configuration)"?>
-  <?define PRODUCT_NAME = "OLEWOO"?>
+  <?define PRODUCT_NAME = "OleWoo"?>
   <?define PRODUCT_DESC = "Type Library Viewer"?>
-  <?define MANUFACTURER="Liebnitz"?>
+  <?define MANUFACTURER="https://github.com/leibnitz27/olewoo"?>
   <?define LICENSE="..\\License.txt" ?>
    
   <?include Version.wxi?>
@@ -71,7 +71,7 @@
         <File Id="oledump.exe" Source="$(var.SOURCE)\oledump.exe" Vital="yes"  />
         <File Id="olewoo.dll" Source="$(var.SOURCE)\olewoo.dll" Vital="yes"  />
         <File Id="olewoo_interop.dll" Source="$(var.SOURCE)\olewoo_interop.dll" Vital="yes"  />
-        <File Id="licence.txt" Source="$(var.LICENSE)" Vital="yes"  />
+        <File Id="license.txt" Source="$(var.LICENSE)" Vital="yes"  />
         <Environment Id="PATH" Name="PATH" Value="[INSTALLLOCATION]" Permanent="no" Part="last" Action="set" System="no" />
       </Component>
       <!--End Help Files-->
@@ -98,7 +98,7 @@
     
     <!-- To use the following you need to reference WixUIExtension.dll in the WIX program files folder -->
     <!--<UIRef Id="WixUI_Minimal" />-->
-    <!--<WixVariable Id="WixUILicenseRtf" Value="Licence.rtf" />-->
+    <!--<WixVariable Id="WixUILicenseRtf" Value="License.rtf" />-->
     <!--<WixVariable Id="WixUIBannerBmp" Value="Banner.bmp" />-->
     <!--<WixVariable Id="WixUIDialogBmp" Value="DlgBmp.bmp" />-->
 
