@@ -6,6 +6,21 @@ using olewoo_interop;
 
 namespace Org.Benf.OleWoo.Typelib
 {
+    internal class TmpIdlFormatter : IDLFormatter_iop
+    {
+        public string data = string.Empty;
+
+        public override void AddLink(string s, string s2)
+        {
+            data += s;
+        }
+
+        public override void AddString(string s)
+        {
+            data += s;
+        }
+    }
+
     internal class OWTypeDef : ITlibNode
     {
         private readonly ITypeInfo _ti;
@@ -20,13 +35,7 @@ namespace Org.Benf.OleWoo.Typelib
             _ti = ti;
 
             string prefix = string.Empty;
-            if(VarEnum.VT_PTR == ((VarEnum)_ta.tdescAlias.vt & VarEnum.VT_PTR))
-            {
-                var otd = _ta.tdescAlias.lptdsec;
-                _ti.GetRefTypeInfo(otd.hreftype, out _oti);
-                prefix = _oti.GetName() + " ";
-            }
-            else if (VarEnum.VT_ARRAY == ((VarEnum) _ta.tdescAlias.vt & VarEnum.VT_ARRAY))
+            if (VarEnum.VT_ARRAY == ((VarEnum) _ta.tdescAlias.vt & VarEnum.VT_ARRAY))
             {
                 var oad = ta.tdescAlias.lpadesc;
                 _ti.GetRefTypeInfo(oad.tdescElem.hreftype, out _oti);
@@ -34,8 +43,13 @@ namespace Org.Benf.OleWoo.Typelib
             }
             else
             {
-                _ti.GetRefTypeInfo(_ta.tdescAlias.hreftype, out _oti);
-                prefix = _oti.GetName() + " ";
+                TmpIdlFormatter tmp = new TmpIdlFormatter();
+                _ta.tdescAlias.ComTypeNameAsString(ti, tmp);
+                prefix = tmp.data + " ";
+                if (VarEnum.VT_USERDEFINED == (VarEnum)_ta.tdescAlias.vt) 
+                {
+                    _ti.GetRefTypeInfo(_ta.tdescAlias.hreftype, out _oti);
+                }
             }
             _name = prefix + ti.GetName();
             _data = new IDLData(this);

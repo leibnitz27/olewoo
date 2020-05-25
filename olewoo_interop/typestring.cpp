@@ -74,9 +74,9 @@ void stringifyTypeDesc(TYPEDESC* typeDesc, ITypeInfo* pTypeInfo, IDLFormatter_io
         // VARIANT/VARIANTARG compatible types
     case VT_I2: ift->AddString( "short"); return;
     case VT_I4: ift->AddString( "long"); return;
-    case VT_R4: ift->AddString( "float"); return;
+    case VT_R4: ift->AddString( "single"); return;
     case VT_R8: ift->AddString( "double"); return;
-    case VT_CY: ift->AddString( "CY"); return;
+    case VT_CY: ift->AddString( "CURRENCY"); return;
     case VT_DATE: ift->AddString( "DATE"); return;
     case VT_BSTR: ift->AddString( "BSTR"); return;
     case VT_DISPATCH: ift->AddString( "IDispatch*"); return;
@@ -84,7 +84,7 @@ void stringifyTypeDesc(TYPEDESC* typeDesc, ITypeInfo* pTypeInfo, IDLFormatter_io
     case VT_BOOL: ift->AddString( "VARIANT_BOOL"); return;
     case VT_VARIANT: ift->AddString( "VARIANT"); return;
     case VT_UNKNOWN: ift->AddString( "IUnknown*"); return;
-    case VT_UI1: ift->AddString( "BYTE"); return;
+    case VT_UI1: ift->AddString( "unsigned char"); return;
     case VT_DECIMAL: ift->AddString( "DECIMAL"); return;
     case VT_I1: ift->AddString( "char"); return;
     case VT_UI2: ift->AddString( "unsigned short"); return;
@@ -97,7 +97,7 @@ void stringifyTypeDesc(TYPEDESC* typeDesc, ITypeInfo* pTypeInfo, IDLFormatter_io
     case VT_VOID: ift->AddString( "void"); return;
     case VT_LPSTR: ift->AddString( "LPSTR"); return;
     case VT_LPWSTR: ift->AddString( "LPWSTR"); return;
-    }
+	}
 	{
 		std::stringstream oss;
 		oss << "[??Unknown type : " << typeDesc->vt << "]";
