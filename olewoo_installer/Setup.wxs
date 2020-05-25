@@ -5,15 +5,14 @@
   <?define SOURCE="..\\$(var.Configuration)"?>
   <?define PRODUCT_NAME = "OleWoo"?>
   <?define PRODUCT_DESC = "Type Library Viewer"?>
-  <?define MANUFACTURER="https://github.com/leibnitz27/olewoo"?>
+  <?define MANUFACTURER="OleWoo"?>
+  <?define GITHUB_URL = "https://github.com/leibnitz27/olewoo" ?>
   <?define LICENSE="..\\License.txt" ?>
    
   <?include Version.wxi?>
 
   <Product Id="*" Name="$(var.PRODUCT_NAME)" Language="1033" Version="$(var.OLEWOO_VERSION)"
            Manufacturer="$(var.MANUFACTURER)" UpgradeCode="$(var.UPGRADE_CODE)">
-
-
 
     <Package InstallerVersion="400" Compressed="yes" Description="$(var.PRODUCT_NAME) $(var.PRODUCT_DESC)"
              InstallPrivileges="limited" InstallScope="perUser" Manufacturer="$(var.MANUFACTURER)" Platform="x86"  />
@@ -37,9 +36,17 @@
     <Condition Message="A newer version of [ProductName] is already installed. The newer version must first be uninstalled.">NOT (NEWERVERSIONINSTALLED OR NEWERVERSIONINSTALLED64)</Condition>
     <!-- End of upgrade details -->
 
+    <!-- Make the icon available-->
     <Icon Id="olewoo.ico" SourceFile="..\olewoo_ui\olewoo.ico"/>
-    <Property Id="ARPPRODUCTICON" Value="olewoo.ico" />    
+
+    <!-- Installer icon in Settings/Apps and Control Panel/Programs and Features -->
+    <Property Id="ARPPRODUCTICON" Value="olewoo.ico" />   
     
+    <!-- Manufacturer URL and Help URL -->
+    <Property Id="ARPURLINFOABOUT" Value="$(var.GITHUB_URL)" />
+    <Property Id="ARPHELPLINK" Value="$(var.GITHUB_URL)" />
+    
+    <!-- Media -->
     <Media Id="1" Cabinet="$(var.OUTPUT_CAB).cab" EmbedCab="yes" />
 
     <!--    Check for .NET 4.6.1    -->
