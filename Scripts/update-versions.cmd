@@ -71,7 +71,7 @@ rem %2 search pattern
 rem %3 replacement pattern
 rem %4 output encoding
 set tempFile=%temp%\olewoo.tmp
-powershell (Get-Content -path "%~1" -Raw -Encoding utf8) -replace '%~2','%~3' ^| out-file "%tempFile%" -encoding %~4
+powershell (Get-Content -path "%~1" -Raw -Encoding utf8) -replace '%~2','%~3' ^| out-file "%tempFile%" -encoding %~4 -NoNewline
 if errorlevel 1 exit /b 1
 
 copy "%tempFile%" "%~1" > nul
