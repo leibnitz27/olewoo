@@ -6,12 +6,12 @@
         <version>1.0.0.0</version>
         <description>Command line tool that dumps tlb files to MIDL.</description>
         <authors>OleWoo</authors>
-        <license type="file">LICENSE.txt</license>
-        
+        <license type="file">License.txt</license>
+        <icon>images\olewoo.ico</icon>
     </metadata>
 
   <files>
-    
+    <file src="..\olewoo_ui\olewoo.ico" target="images\" />
     <file src="..\LICENSE.txt" target="" />
     <file src="..\$configuration$\oledump.exe" target="tools" />
     <file src="..\$configuration$\olewoo_interop.dll" target="tools" />
