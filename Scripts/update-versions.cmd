@@ -25,33 +25,33 @@ set wixVersionRegex=(.\?define\s+OLEWOO_VERSION\s*=\s*.)%versionNumberRegex%(.\s
 set wixVersionReplacement=${1}%newVersion%${2}
 
 echo Updating oledump
-call :regexReplace "..\oledump\Properties\AssemblyInfo.cs" "%assemblyVersionRegex%" "%assemblyVersionReplacement%"
+call :regexReplace "..\oledump\Properties\AssemblyInfo.cs" "%assemblyVersionRegex%" "%assemblyVersionReplacement%" utf8
 %checkError%
 
 echo Updating olewoo_cs
-call :regexReplace "..\olewoo_cs\Properties\AssemblyInfo.cs" "%assemblyVersionRegex%" "%assemblyVersionReplacement%"
+call :regexReplace "..\olewoo_cs\Properties\AssemblyInfo.cs" "%assemblyVersionRegex%" "%assemblyVersionReplacement%" utf8
 %checkError%
 
 echo Updating olewoo_ui
-call :regexReplace "..\olewoo_ui\Properties\AssemblyInfo.cs" "%assemblyVersionRegex%" "%assemblyVersionReplacement%"
+call :regexReplace "..\olewoo_ui\Properties\AssemblyInfo.cs" "%assemblyVersionRegex%" "%assemblyVersionReplacement%" utf8
 %checkError%
 
 echo Updating olewoo_interop 
-call :regexReplace "..\olewoo_interop\AssemblyInfo.cpp" "%assemblyVersionRegex%" "%assemblyVersionReplacement%"
+call :regexReplace "..\olewoo_interop\AssemblyInfo.cpp" "%assemblyVersionRegex%" "%assemblyVersionReplacement%" utf8
 %checkError%
 
-call :regexReplace "..\olewoo_interop\app.rc" "%rcDetailsRegex%" "%rcDetailsReplacement%"
+call :regexReplace "..\olewoo_interop\app.rc" "%rcDetailsRegex%" "%rcDetailsReplacement%" unicode
 %checkError%
 
-call :regexReplace "..\olewoo_interop\app.rc" "%rcVersionInfoRegex%" "%rcVersionInfoReplacement%"
+call :regexReplace "..\olewoo_interop\app.rc" "%rcVersionInfoRegex%" "%rcVersionInfoReplacement%" unicode
 %checkError%
 
 echo Updating nuget packager
-call :regexReplace "..\oledump_nuget\OleWoo.OleDump.nuspec" "%nuspecVersionRegex%" "%nuspecVersionReplacement%"
+call :regexReplace "..\oledump_nuget\OleWoo.OleDump.nuspec" "%nuspecVersionRegex%" "%nuspecVersionReplacement%" utf8
 %checkError%
 
 echo Updating installer project
-call :regexReplace "..\olewoo_installer\Version.wxi" "%wixVersionRegex%" "%wixVersionReplacement%"
+call :regexReplace "..\olewoo_installer\Version.wxi" "%wixVersionRegex%" "%wixVersionReplacement%" utf8
 %checkError%
 
 echo Done.
@@ -66,8 +66,12 @@ if "%newVersion%"=="" exit /b 1
 
 
 :regexReplace
+rem %1 input file path
+rem %2 search pattern
+rem %3 replacement pattern
+rem %4 output encoding
 set tempFile=%temp%\olewoo.tmp
-powershell (Get-Content -path "%~1" -Raw -Encoding utf8) -replace '%~2','%~3' ^| out-file "%tempFile%" -encoding utf8
+powershell (Get-Content -path "%~1" -Raw -Encoding utf8) -replace '%~2','%~3' ^| out-file "%tempFile%" -encoding %~4
 if errorlevel 1 exit /b 1
 
 copy "%tempFile%" "%~1" > nul
