@@ -96,6 +96,7 @@
     <Compile Include="GuiMisc\UpdateSuspender.cs" />
     <Compile Include="MRUList.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="wooctrl.cs">
       <SubType>UserControl</SubType>
     </Compile>

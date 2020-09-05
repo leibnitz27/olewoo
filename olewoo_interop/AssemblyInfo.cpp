@@ -1,4 +1,4 @@
-#include "stdafx.h"
+include "stdafx.h"
 
 using namespace System;
 using namespace System::Reflection;
@@ -16,7 +16,7 @@ using namespace System::Security::Permissions;
 [assembly:AssemblyConfigurationAttribute("")];
 [assembly:AssemblyCompanyAttribute("http://www.benf.org")];
 [assembly:AssemblyProductAttribute("olewoo_interop")];
-[assembly:AssemblyCopyrightAttribute("Copyright (c)  2010")];
+[assembly:AssemblyCopyright("Lee Benfield © 2010-2020")]
 [assembly:AssemblyTrademarkAttribute("")];
 [assembly:AssemblyCultureAttribute("")];
 
@@ -31,8 +31,27 @@ using namespace System::Security::Permissions;
 // You can specify all the value or you can default the Revision and Build Numbers
 // by using the '*' as shown below:
 
-[assembly:AssemblyVersionAttribute("1.0.*")];
+[assembly:AssemblyVersionAttribute("2.1.0.0")];
+[assembly:AssemblyFileVersionAttribute("2.1.0.0")];
 
 [assembly:ComVisible(false)];
 
 [assembly:CLSCompliantAttribute(true)];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
