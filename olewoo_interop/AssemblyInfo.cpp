@@ -1,4 +1,4 @@
-include "stdafx.h"
+﻿include "stdafx.h"
 
 using namespace System;
 using namespace System::Reflection;
@@ -31,12 +31,14 @@ using namespace System::Security::Permissions;
 // You can specify all the value or you can default the Revision and Build Numbers
 // by using the '*' as shown below:
 
-[assembly:AssemblyVersionAttribute("2.1.0.0")];
-[assembly:AssemblyFileVersionAttribute("2.1.0.0")];
+[assembly:AssemblyVersionAttribute("1.0.0.0")];
+[assembly:AssemblyFileVersionAttribute("1.0.0.0")];
 
 [assembly:ComVisible(false)];
 
 [assembly:CLSCompliantAttribute(true)];
+
+
 
 
 

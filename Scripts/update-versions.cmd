@@ -67,7 +67,7 @@ if "%newVersion%"=="" exit /b 1
 
 :regexReplace
 set tempFile=%temp%\olewoo.tmp
-powershell (Get-Content -path "%~1" -Raw -Encoding utf8) -replace '%~2','%~3' > %tempFile%
+powershell (Get-Content -path "%~1" -Raw -Encoding utf8) -replace '%~2','%~3' ^| out-file "%tempFile%" -encoding utf8
 if errorlevel 1 exit /b 1
 
 copy "%tempFile%" "%~1" > nul

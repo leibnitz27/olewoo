@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         
         <id>OleWoo.OleDump</id>
-        <version>2.1.0.0</version>
+        <version>1.0.0.0</version>
         <description>Command line tool that dumps tlb files to MIDL.</description>
         <authors>OleWoo</authors>
         <license type="file">LICENSE.txt</license>
@@ -20,6 +20,8 @@
 
   
 </package>
+
+
 
 
 
