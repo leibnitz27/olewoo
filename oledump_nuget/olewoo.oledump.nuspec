@@ -8,6 +8,9 @@
         <authors>OleWoo</authors>
         <license type="file">License.txt</license>
         <icon>images\olewoo.ico</icon>
+        <projectUrl>https://github.com/leibnitz27/olewoo</projectUrl>
+        <copyright>Lee Benfield &#169; 2010-2020</copyright>
+        <tags>oleview olewoo typelibrary "type library" typelib tlb midl tlbexp com</tags>
     </metadata>
 
   <files>
