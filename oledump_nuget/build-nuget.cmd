@@ -22,8 +22,6 @@ if errorlevel 1 (
 )
 for /f "tokens=*" %%f in ('type "%tempfile%"') do set nuget="%%f"
 
-echo %targetdir%
-
 %nuget% pack "%nuspec%" -Properties "Configuration=%config%" -OutputDirectory "%targetDir%"
 if errorlevel 1 (
 	call :errorMessage "Nuget failed to pack. See the output window for more details."
@@ -38,6 +36,7 @@ echo   %~nx0 nuspecFile configuration targetDir
 goto :error
 
 rem Write a Visual Studio error window compatible error message
+rem Visual studio recognises output in this form and puts it in the error window.
 :errorMessage
 echo %~dpnx0: error: %~1
 %return%
