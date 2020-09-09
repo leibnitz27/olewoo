@@ -4,7 +4,7 @@
         
         <id>OleWoo.OleDump</id>
         <version>1.0.0.0</version>
-        <description>Command line tool that dumps tlb (type library) files to IDL (Interface Definition Language).</description>
+        <description>Command line tool that dumps type library files to IDL (Interface Definition Language).</description>
         <authors>OleWoo</authors>
         <license type="expression">MIT</license>
         <icon>images\olewoo.ico</icon>
