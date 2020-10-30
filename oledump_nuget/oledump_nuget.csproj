@@ -64,6 +64,7 @@
   <ItemGroup>
     <None Include="build-nuget.cmd" />
     <None Include="olewoo.oledump.nuspec" />
+    <None Include="oledump.props" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\oledump\oledump.csproj">
