@@ -19,6 +19,7 @@
     <file src="..\$configuration$\oledump.exe" target="tools" />
     <file src="..\$configuration$\olewoo_interop.dll" target="tools" />
     <file src="..\$configuration$\olewoo.dll" target="tools" />
+    <file src="olewoo.oledump.props" target="build/" />
   </files>
 
   

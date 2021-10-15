@@ -19,7 +19,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <NuspecFile>OleWoo.OleDump.nuspec</NuspecFile>
     <NuspecProperties>configuration=$(Configuration)</NuspecProperties>
-	<PackageOutputPath>..\$(Configuration)</PackageOutputPath>
+    <PackageOutputPath>..\$(Configuration)</PackageOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="olewoo.oledump.nuspec" />
+    <None Include="olewoo.oledump.props" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\oledump\oledump.csproj">
