@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        
+        <id>OleWoo.OleDump</id>
+        <version>1.0.0.0</version>
+        <description>Command line tool that dumps type library files to IDL (Interface Definition Language).</description>
+        <authors>OleWoo</authors>
+        <license type="expression">MIT</license>
+        <icon>images\olewoo.ico</icon>
+        <projectUrl>https://github.com/leibnitz27/olewoo</projectUrl>
+        <copyright>Lee Benfield &#169; 2010-2020</copyright>
+        <tags>oleview olewoo typelibrary "type library" typelib tlb idl midl "interface definition language" tlbexp com</tags>
+    </metadata>
+
+  <files>
+    <file src="..\olewoo_ui\olewoo.ico" target="images\" />
+    <file src="..\LICENSE.txt" target="" />
+    <file src="..\$configuration$\oledump.exe" target="tools" />
+    <file src="..\$configuration$\olewoo_interop.dll" target="tools" />
+    <file src="..\$configuration$\olewoo.dll" target="tools" />
+    <file src="olewoo.oledump.props" target="build/" />
+  </files>
+
+  
+</package>
