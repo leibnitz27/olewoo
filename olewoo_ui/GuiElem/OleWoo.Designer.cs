@@ -158,6 +158,7 @@
             this.tcTypeLibs.Size = new System.Drawing.Size(784, 416);
             this.tcTypeLibs.TabIndex = 2;
             this.tcTypeLibs.TabStop = false;
+            this.tcTypeLibs.ShowToolTips = true;
             this.tcTypeLibs.SelectedIndexChanged += new System.EventHandler(this.tcTypeLibs_SelectedIndexChanged);
             // 
             // OleWoo

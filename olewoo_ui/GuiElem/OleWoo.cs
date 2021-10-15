@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Windows.Forms;
 using Org.Benf.OleWoo.Typelib;
 
@@ -23,18 +24,30 @@ namespace Org.Benf.OleWoo.GuiElem
             }
         }
 
-        private void OpenFile(string fname)
+        private void OpenFile(string filePath)
         {
             try
             {
-                var tl = new OWTypeLib(fname);
-                var tp = new TabPage(tl.ShortName) {ImageIndex = 0};
-                var wc = new Wooctrl(imglstTreeNodes, imgListMisc, tl);
-                tp.Controls.Add(wc);
-                tp.Tag = tl;
-                wc.Dock = DockStyle.Fill;
-                tcTypeLibs.TabPages.Add(tp);
-                _mrufiles.AddItem(fname);
+                string lower = filePath.ToLower();
+                string extension = Path.GetExtension(lower);
+                string[] typeLibs = NativeMethods.EnumerateTypeLibs(lower);
+
+                if (typeLibs.Length == 0)
+                    typeLibs = new string[] { filePath };
+                else 
+                    typeLibs = typeLibs.Select(name => filePath + "\\" + name).ToArray();
+                
+                foreach (string typeLibPath in typeLibs)
+                {
+                    var typeLib = new OWTypeLib(typeLibPath);
+                    var tabPage = new TabPage(typeLib.ShortName) { ImageIndex = 0, ToolTipText = typeLibPath };
+                    var wooCtrl = new Wooctrl(imglstTreeNodes, imgListMisc, typeLib);
+                    tabPage.Controls.Add(wooCtrl);
+                    tabPage.Tag = typeLib;
+                    wooCtrl.Dock = DockStyle.Fill;
+                    tcTypeLibs.TabPages.Add(tabPage);
+                    _mrufiles.AddItem(typeLibPath);
+                }
                 _mrufiles.Flush();
             }
             catch (Exception ex)
@@ -60,6 +73,8 @@ namespace Org.Benf.OleWoo.GuiElem
                     break;
             }
         }
+              
+
 
         private void aboutOleWooToolStripMenuItem_Click(object sender, EventArgs e)
         {
