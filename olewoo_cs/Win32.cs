@@ -40,6 +40,14 @@ namespace Org.Benf.OleWoo
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool FreeLibrary(IntPtr hModule);
 
+        [DllImport("kernel32.dll", EntryPoint = "EnumResourceNamesW",
+CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern bool EnumResourceNamesWithName(
+IntPtr hModule,
+string lpszType,
+EnumResNameDelegate lpEnumFunc,
+IntPtr lParam);
+
         private static bool IsIntResource(IntPtr value)
         {
             if (((uint)value) > ushort.MaxValue)
@@ -98,16 +106,6 @@ namespace Org.Benf.OleWoo
         [DllImport("oleaut32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern int LoadTypeLib(string fileName, out ITypeLib typeLib);
 
-
-        [DllImport("kernel32.dll", EntryPoint = "EnumResourceNamesW",
-      CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern bool EnumResourceNamesWithName(
-      IntPtr hModule,
-      string lpszType,
-      EnumResNameDelegate lpEnumFunc,
-      IntPtr lParam);
-
-
         [DllImport("oleaut32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern void ClearCustData(IntPtr pCustData);
 
@@ -125,6 +123,6 @@ namespace Org.Benf.OleWoo
             SendMessage(box.Handle, 0x00CB, new IntPtr(1), ref lParam);
             box.Invalidate();
         }
-              
+
     }
 }
