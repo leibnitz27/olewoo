@@ -1,15 +1,16 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OleWoo")]
-[assembly: AssemblyDescription("OleWoo is a ground up functional reimplementation of the Typelibrary viewer component of Microsoft's 'OLEVIEW'.\r\n\r\nOleWoo allows multiple TLBs to be browsed simultaneously, offers better performance than Oleview, and supports text and symbol searching.\r\n\r\nIcon \"We Love Cows - Bull\" by Archigraphs (Cyberella) used under CC NonCommercial licence.  http://www.archigraphs.com\r\n\r\n")]
+[assembly: AssemblyTitle("olewoo_ui")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("http://www.benf.org")]
-[assembly: AssemblyProduct("OleWoo")]
-[assembly: AssemblyCopyright("Lee Benfield © 2010-2021")]
+[assembly: AssemblyProduct("olewoo_ui")]
+[assembly: AssemblyCopyright("Lee Benfield © 2010-2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("5c45ea00-b990-4840-9474-f9adf99234fb")]
+[assembly: Guid("FEF6B85F-DDF5-4A74-BF2D-0C0A4F15133A")]
 
 // Version information for an assembly consists of the following four values:
 //
