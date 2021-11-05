@@ -1,5 +1,5 @@
 @echo off
-setlocal
+setlocal EnableExtensions
 set return=goto :eof
 set checkError=if errorlevel 1 goto :error
 
@@ -12,7 +12,7 @@ call :getNewVersion newVersion
 set newVersionCommas=%newVersion:.=,%
 
 rem Non-optimal regexes: useful characters for OR, lookbehind and " are troublesome in batch scripting
-set versionNumberRegex=\d+(?:\.\d+){3}
+set versionNumberRegex=\d+(?:\.\d+){2,3}
 set assemblyVersionRegex=(Assembly(?:File)?Version(?:Attribute)?\(.)%versionNumberRegex%
 set assemblyVersionReplacement=${1}%newVersion%
 set rcVersionInfoRegex=((?:[FILEPRODUCT]+)VERSION\s+)\d+(?:,\d+){3}
@@ -72,7 +72,7 @@ rem %3 replacement pattern
 rem %4 output encoding
 set tempFile=%temp%\olewoo.tmp
 powershell (Get-Content -path "%~1" -Raw -Encoding utf8) -replace '%~2','%~3' ^| out-file "%tempFile%" -encoding %~4 -NoNewline
-if errorlevel 1 exit /b 1
+if %errorlevel% NEQ 0 exit /b 1
 
 copy "%tempFile%" "%~1" > nul
 if errorlevel 1 exit /b 1
