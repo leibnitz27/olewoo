@@ -37,7 +37,7 @@
     <!-- End of upgrade details -->
 
     <!-- Make the icon available-->
-    <Icon Id="olewoo.ico" SourceFile="..\olewoo_ui\olewoo.ico"/>
+    <Icon Id="olewoo.ico" SourceFile="..\Shared\olewoo.ico"/>
 
     <!-- Installer icon in Settings/Apps and Control Panel/Programs and Features -->
     <Property Id="ARPPRODUCTICON" Value="olewoo.ico" />   

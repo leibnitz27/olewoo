@@ -14,7 +14,7 @@
     </metadata>
 
   <files>
-    <file src="..\olewoo_ui\olewoo.ico" target="images\" />
+    <file src="..\Shared\olewoo.ico" target="images\" />
     <file src="..\LICENSE.txt" target="" />
     <file src="..\$configuration$\oledump.exe" target="tools" />
     <file src="..\$configuration$\olewoo_interop.dll" target="tools" />
